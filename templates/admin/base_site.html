@@ -1,0 +1,25 @@
+{% extends "admin/base.html" %}
+
+{% block title %}Observatorio UTP | Administración{% endblock %}
+
+{% block extrastyle %}
+<style>
+	#header {background: #4c2b1d;}
+	table caption {background: : #4c2b1d;}
+</style>
+
+{% endblock %}
+
+{% block branding %}
+{% if request.user.is_superusuario %}
+<h1 id="site-name">
+	<a href="{% url 'admin:index' %}">{{ site_header|default:_('Django administration') }}</a>
+</h1>
+{% elif request.user_administrador%}
+<h1 id="site-name">
+	<a href="{% url 'admin_site:index' %}">{{ site_header|default:_('Django administration') }}</a>
+</h1>
+{% endif %}
+{% endblock %}
+
+{% block nav-global %}{% endblock %}
