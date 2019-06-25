@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+
+  {% load static %}
+  <meta charset="utf-8">
+  <title>Observatorio UTP</title>
+  <meta content="width=device-width, initial-scale=1.0" name="viewport">
+  <meta content="" name="keywords">
+  <meta content="" name="description">
+
+  <!-- Bootstrap CSS File -->
+  <link href="{% static 'app_core/css/bootstrap.min.css' %}" rel="stylesheet">
+
+  <!-- Libraries CSS Files -->
+  <link href="{% static 'app_core/css/font-awesome.min.css' %}" rel="stylesheet">
+  <link href="{% static 'app_core/css/animate.min.css' %}" rel="stylesheet">
+
+  <!-- Main Stylesheet File -->
+  <link href="{% static 'app_core/css/style.css' %}" rel="stylesheet">
+</head>
+
+<body>
+  <header id="header" class="fixed-top">
+    <div class="container">
+      <div class="logo float-left">
+        <a href="#intro" class="scrollto"><img src="{% static 'app_core/img/UU.png' %}" alt="" class="img-fluid"></a>
+      </div>
+      <nav class="main-nav float-right d-none d-lg-block">
+        <ul>
+          <!--<li class="active"><a href="#intro">Recargar</a></li>-->
+          <li><a href="{% url 'registrarse' %}">Registrarse</a></li>
+          <li><a href="{% url 'login_' %}">Iniciar Sesión</a></li>
+        </ul>
+      </nav>    
+    </div>
+  </header>
+  <!--==========================
+    Intro Section
+  ============================-->
+  <section id="intro" class="clearfix">
+    <div class="container">
+      <div class="intro-img">
+        <img src="{% static 'app_core/img/intro-img.svg' %}" alt="" class="img-fluid">
+      </div>
+    </div>
+  </section>
+
+  <a href="#" class="back-to-top"><i class="fa fa-chevron-up"></i></a>
+  <script src="{% static 'app_core/js/jquery.min.js' %}"></script>
+  <script src="{% static 'app_core/js/jquery-migrate.min.js' %}"></script>
+  <script src="{% static 'app_core/js/bootstrap.bundle.min.js' %}"></script>
+  <script src="{% static 'app_core/js/mobile-nav.js' %}"></script>
+  <script src="{% static 'app_core/js/main.js' %}"></script>
+</body>
+</html>
