@@ -1,0 +1,111 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta charset="utf-8">
+    <title>Formulario de Registro</title>
+    <link rel="stylesheet" href="http://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+    {% load static %}
+    <link rel="stylesheet" type="text/css" href="{% static 'app_registrarse/css/register.css' %}">
+    <script src="https://www.recaptcha.net/recaptcha/api.js" async defer></script>
+</head>
+
+{% load static %}
+<body>
+  <div class="contain">
+    <div class="wrapper"></div>
+      <div class="contacts" align="center">
+        <h1>FORMULARIO DE REGISTRO</h1>
+      </div>
+      <br>
+      <div class="form">
+        <form action="" method="POST">
+          {% csrf_token %}
+          <p>
+            <label for="Tipo_de_identificacion">Tipo de identificación:</label>
+            {{form.Tipo_de_identificacion}}
+          </p>
+          <p>
+             <label for="DNI">DNI:</label>
+             {{form.DNI}}
+          </p>
+          <p>
+            <label for="username">Nombre:</label>
+            {{form.nombres}}
+            {{form.nombres.errors}}
+          </p>                  
+          <p>
+            <label for="apellidos">Apellidos:</label>
+            {{form.apellidos}}
+            {{form.apellidos.errors}}
+          </p>
+          <p>
+            <label for="country">Pais:</label>
+             {{form.pais}}
+          </p>
+          <p>
+            {{form.ciudad}}
+          </p>
+          <p>
+            <label for="email">Email:</label>
+            {{form.email}}
+            {{form.email.errors}}
+          </p>
+          
+          <p>
+            <label for="fecha_nacimiento">Fecha de nacimiento:</label>
+            {{form.fecha_nacimiento}}
+            {{form.fecha_nacimiento.errors}}
+          </p>
+
+          <p>
+            <label for="genero">Genero:</label>
+            {{form.genero}}
+          </p>                 
+              
+          <p>
+            <label for="contraseña">Contraseña:</label>
+            {{form.contraseña}}
+            {{form.contraseña.errors}}
+          </p>
+          <div>
+          {{form.confirmacion}}
+          <label for="confirmacion">Confirma qu</label>      
+          {{form.confirmacion.errors}} 
+          </div>
+          <p>
+            <div class="full-width" align="center">
+             {{form.captcha}}              
+            </div>                 
+          </p>
+
+          <p class="full-width">
+            <input type="submit" value="ENVIAR INFORMACIÓN">
+          </p>
+        </form>
+        <script>
+        function changecountry() {
+        select_ciudad= document.getElementById("ciudades");
+          while (select_ciudad.firstChild) {
+              select_ciudad.removeChild(select_ciudad.firstChild);
+          }
+         pais=document.getElementById("idpais");
+           var country = encodeURIComponent(pais.value); // &
+            const url = "{% url 'cities' %}" + "?pais="+country;
+            fetch(url, {'credentials':'include'}).then(response => response.json()).then(function(data){
+                var i=0;
+                var ciudad='';
+                for (i=0; i< data['ciudades'].length; i++){
+                  ciudad= data['ciudades'][i];
+                  ciudad_option = document.createElement('OPTION');
+                  ciudad_option.value=ciudad;
+                  ciudad_option.text= ciudad;
+                  select_ciudad.appendChild(ciudad_option);
+                }
+            })
+          }
+        </script>
+      </div>
+  </div>
+</body>
+</html>

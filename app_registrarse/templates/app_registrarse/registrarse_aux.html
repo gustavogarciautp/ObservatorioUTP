@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta charset="utf-8">
+    <title>Registration Form</title>
+    <link rel="stylesheet" href="http://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+    {% load static %}
+    <link rel="stylesheet" type="text/css" href="{% static 'app_registrarse/css/registrarse.css' %}">
+    <script src="https://www.recaptcha.net/recaptcha/api.js" async defer></script>
+</head>
+
+{% load static %}
+<body>
+    <div class="container" id="registration-form">
+        <div class="image"></div>
+        <div class="frm">
+            <h1>Registrarse</h1>
+            <form action="" method="POST">
+              {% csrf_token %}
+                <div class="form-group">
+                    <label for="Tipo_de_identificacion">Tipo de identificación:</label>
+                    {{form.Tipo_de_identificacion}}
+                </div>
+                {{form.Tipo_de_identificacion.errors}}
+                <div class="form-group">
+                    <label for="DNI">DNI:</label>
+                    {{form.DNI}}
+                </div>
+                {{form.DNI.errors}}
+                <div class="form-group">
+                    <label for="username">Nombre:</label>
+                    {{form.nombres}}
+                </div>
+                {{form.nombres.errors}}
+                <div class="form-group">
+                    <label for="apellidos">Apellidos:</label>
+                    {{form.apellidos}}
+                </div>
+                {{form.apellidos.errors}}
+                <div class="form-group">
+                    <label for="country">Pais:</label>
+                    <br>
+                    {{form.pais}}
+                </div>
+                <div class="form-group">
+                    <label for="email">Email:</label>
+                    {{form.email}}
+                </div>
+                {{form.email.errors}}
+                <div class="form-group">
+                  <label for="fecha_nacimiento">Fecha de nacimiento:</label>
+                  <br>
+                  {{form.fecha_nacimiento}}
+                </div>
+                {{form.fecha_nacimiento.errors}}
+                <div class="form-group">
+                  <label for="genero">Genero:</label>
+                  <br>
+                  {{form.genero}}
+                </div>
+                <div class="form-group">
+                  <label for="contraseña">Contraseña:</label>
+                  <br>
+                  {{form.contraseña}}
+                </div>
+                {{form.contraseña.errors}}
+                <!--
+                <div class="form-group">
+                  <label for="interes">Interes:</label>
+                  <br>
+                  {{form.interes_}}
+                </div>-->
+                <div class="form-group">
+                  {{form.confirmacion}}<label for="confirmacion">Confirma que confia en Sistema de Egresados para el manejo de datos sensibles"</label>
+                </div>
+                {{form.confirmacion.errors}}
+                <!--<div class="g-recaptcha" data-sitekey="6LdaUqcUAAAAAOK3xzjo-oknTM33fbXExlcwFG0z"></div>
+                {{form.captcha}}
+                <div class="form-group">-->
+                    <button type="submit" class="btn btn-success btn-lg">Enviar</button>
+                </div>
+
+            </form>
+        </div>
+    </div>
+</body>
+
+</html>
