@@ -33,9 +33,10 @@ admin_site.register(Intereses)
 admin_site.register(Interes)
 
 class AdminEgresado(admin.ModelAdmin):
-	exclude= ('is_superuser','is_staff','id_restablecimiento', 'is_active','is_egresado','is_administrador', 'is_superusuario')
+	#exclude= ('is_superuser','is_staff','id_restablecimiento', 'is_active','is_egresado','is_administrador', 'is_superusuario')
+	fields = ('Tipo_de_identificacion','DNI','nombres','apellidos', 'genero','email','pais','ciudad','validado','activacion','last_login')
 	search_fields = ['nombres','apellidos','email']
 	list_display= ('nombres','apellidos','email', 'activacion','validado')
-	readonly_fields = ('DNI','Tipo_de_identificacion', 'validado')
+	readonly_fields = ('DNI','Tipo_de_identificacion','nombres','apellidos','genero','email','pais','ciudad','validado','last_login')
 
 admin_site.register(Egresado, AdminEgresado)

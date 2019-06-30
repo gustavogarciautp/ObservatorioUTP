@@ -1,6 +1,5 @@
 from django.shortcuts import render, get_object_or_404, redirect
 from .forms import LoginForm, Recuperar1Form, Recuperar2Form, EditProfileForm
-import hashlib
 from .models import Administrador, Egresado, User, SuperUser
 from django.core.mail import EmailMultiAlternatives
 from django.urls import reverse, resolve 
@@ -25,8 +24,7 @@ def login(request):
                 #current_url= resolve(request.path_info).url_name
                 try:
                     if current_url=='login_':
-                        password_cifrada= hashlib.sha1(password.encode()).hexdigest()
-                        user = authenticate(request, email=email, password=password_cifrada)    
+                        user = authenticate(request, email=email, password=password)    
                         if user:
                             if not user.activate():
                                 return redirect(reverse('login_')+'?fail') 
@@ -78,9 +76,10 @@ def recuperar_1(request):
                 clave_cifrada= hashlib.sha1(str(obj.id).encode()).hexdigest()
                 link='http://127.0.0.1:8000/recuperar_2/'+str(clave_cifrada)
 
-                html_content='<p>Ha recibido este correo electrónico porque ha solicitado restablecer la contraseña para su cuenta en <a href="http://127.0.0.1:8000">http://127.0.0.1:8000</a></p></br><p>Por favor vaya a la pagina siguiente y escoja una nueva password.</p></br><a href="http://127.0.0.1:8000/recuperar_2/'+str(clave_cifrada)+'">Recuperar contraseña</a></br><p>Su nombre de usuario en caso de haberlo olvidado.</p></br><p>¡Gracias por usar nuestro sitio!</p></br>El equipo de <a href=" http://127.0.0.1:8000">Observatorio Egresados</a>'
-                msg = EmailMultiAlternatives(asunto, content, to=[email])
+                html_content='<p>Ha recibido este correo electrónico porque ha solicitado restablecer la contraseña para su cuenta en <a href="http://127.0.0.1:8000">http://127.0.0.1:8000</a></p></br><p>Por favor vaya a la siguiente página y escoja una nueva password.</p></br><a href="http://127.0.0.1:8000/recuperar_2/'+str(clave_cifrada)+'">Recuperar contraseña</a></br></br><p>¡Gracias por usar nuestro sitio!</p></br>El equipo de <a href=" http://127.0.0.1:8000">Observatorio Egresados</a>'
+                msg = EmailMultiAlternatives(asunto, '', to=[email])
                 msg.attach_alternative(html_content, "text/html")
+
                 msg.send()
 
                 #email.send() #enviamos el mensaje

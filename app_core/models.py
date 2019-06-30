@@ -9,6 +9,8 @@ from cities_light.receivers import connect_default_signals
 from django.dispatch import receiver
 from django.db.models.signals import pre_save, post_save
 from django.utils.crypto import get_random_string
+from django.core.mail import EmailMultiAlternatives
+
 
 
 IDENTIFICACION= [["Cédula de ciudadania","Cédula de ciudadania"], ["Pasaporte", "Pasaporte"]]
@@ -104,6 +106,7 @@ class User(AbstractBaseUser):
     nombres =models.CharField(verbose_name= "Nombres", default='',max_length=30, blank= False, null=False)
     apellidos = models.CharField(verbose_name= "Apellidos", default='',max_length=30, blank= False, null=False)
     pais = models.CharField(verbose_name="Pais", default='', null=False, blank= False, max_length=30) 
+    ciudad= models.CharField(verbose_name="Ciudad", max_length=30, default='')
     email = models.EmailField(verbose_name="Email",default='',null= False, blank= False, unique=True, max_length=255) #campo opcional
     genero = models.CharField(verbose_name="Genero",default='',null= True, blank= True, max_length=10, choices=GENEROS) #campo opcional
     #contraseña = models.CharField(verbose_name="Contraseña",default='',null= False, blank= False, max_length=128) #campo opcional
@@ -132,7 +135,6 @@ class User(AbstractBaseUser):
 class Administrador (User):
     telefono = models.IntegerField(verbose_name= "Telefono", default='', null=True, blank=True)
     direccion = models.CharField(verbose_name= "Direccion", max_length=30, blank= False, null=False)
-    ciudad= models.CharField(verbose_name="Ciudad", max_length=30)
     is_active = models.BooleanField(default=True)
     is_egresado = models.BooleanField(default=False)
     is_administrador = models.BooleanField(default=True)
@@ -162,17 +164,24 @@ class Administrador (User):
 @receiver(post_save, sender= Administrador)
 def make_first_password(sender, instance, **kwargs):
     if kwargs.get('created', False): #con esto nos aseguramos que la instancia se acaba de crear   
-        """password_gen = get_random_string(length=90)
-        instance.password = password_gen"""
-        print("primeras")
-        instance.set_password("12345678a")
-        print(instance.password)
+        password_gen = get_random_string(length=90)
+        #instance.password = password_gen
+        instance.set_password(password_gen)
         instance.save()
-        print(instance.password)
+
+        asunto= '!Bienvenido al sitio de administración del Sistema de Egresados UTP!'
+
+        link="http://127.0.0.1:8000/change_password/first/"+get_random_string(length=90)
+
+        html_content='<p>Ha recibido este correo electrónico porque ha sido registrada una cuenta de administrador con los siguientes datos:</p></br><p>Nombre de Usuario: '+instance.email+'</p></br><p>Contraseña: '+password_gen+'</p></br><p>Para iniciar sesión por primera vez debera cambiar su actual contraseña, puede hacerlo a través del siguiente enlace:</p></br><p><a href="http://127.0.0.1:8000/change_password/first/'+get_random_string(length=90)+'">Cambiar contraseña</a></p></br><p>¡Gracias por usar nuestro sitio!</p></br><p>El equipo de <a href=" http://127.0.0.1:8000">Observatorio Egresados</a></p>'
+        msg = EmailMultiAlternatives(asunto, '', to=[instance.email])
+        msg.attach_alternative(html_content, "text/html")
+        msg.send()
+
 
 
 class Egresado (User):
-    activacion= models.BooleanField(verbose_name= "Activacion", default= False, null=True, blank= False)
+    activacion= models.BooleanField(verbose_name= "Activacion", default= False, null=False, blank= False)
     fecha_nacimiento = models.DateField(verbose_name="Fecha de nacimiento",null= True, blank= True) #campo opcional
     is_active = models.BooleanField(default=True)
     is_egresado = models.BooleanField(default=True)

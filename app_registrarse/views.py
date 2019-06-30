@@ -48,7 +48,8 @@ def registrarse(request):
 
             apellidos = request.POST.get('apellidos')
             pais = request.POST.get('pais')
-            pais_obj= Paises.objects.get(pais=pais)
+            #pais_obj= Paises.objects.get(pais=pais)
+            ciudad = request.POST.get('ciudad')
 
             fecha_nacimiento_month= request.POST.get('fecha_nacimiento_month')
             fecha_nacimiento_day= request.POST.get('fecha_nacimiento_day')
@@ -60,16 +61,18 @@ def registrarse(request):
             email= request.POST.get('email')
             genero=request.POST.get('genero')
             contraseña=request.POST.get('contraseña')
-            contraseña_cifrada= hashlib.sha1(contraseña.encode()).hexdigest()
+            #contraseña_cifrada= hashlib.sha1(contraseña.encode()).hexdigest()
             activacion=False
             validado = False
-            graduate = EgresadosUTP.objects.get(DNI=DNI)
+            graduate = EgresadosUTP.objects.filter(DNI=DNI)
 
             if graduate:
                 validado = True
             #intereses_=(request.POST.getlist('interes_'))
 
-            obj = Egresado.objects.create(DNI=DNI, Tipo_de_identificacion=Tipo_de_identificacion, nombres=nombres, apellidos=apellidos, pais=pais_obj, fecha_nacimiento=date, genero=genero,email=email, password= contraseña_cifrada, activacion= activacion, validado= validado)
+            obj = Egresado(DNI=DNI, Tipo_de_identificacion=Tipo_de_identificacion, nombres=nombres, apellidos=apellidos, pais=pais, ciudad=ciudad,fecha_nacimiento=date, genero=genero,email=email, activacion= activacion, validado= validado)
+            obj.set_password(contraseña)
+            obj.save()
             """
             for interes_ in intereses_:
             	obj_int= Interes.objects.get(nombre=interes_)

@@ -28,6 +28,7 @@
           <p>
              <label for="DNI">DNI:</label>
              {{form.DNI}}
+             {{form.DNI.errors}}
           </p>
           <p>
             <label for="username">Nombre:</label>
@@ -73,17 +74,28 @@
           <label for="confirmacion">Confirma qu</label>      
           {{form.confirmacion.errors}} 
           </div>
+          <!--
           <p>
             <div class="full-width" align="center">
              {{form.captcha}}              
             </div>                 
           </p>
-
+          -->
           <p class="full-width">
             <input type="submit" value="ENVIAR INFORMACIÓN">
           </p>
         </form>
         <script>
+        window.onload=deleteinit;
+
+        function deleteinit(){
+        select_ciudad= document.getElementById("ciudades");
+        if (select_ciudad.value=="init"){
+            changecountry();
+          }
+        }
+
+
         function changecountry() {
         select_ciudad= document.getElementById("ciudades");
           /*while (select_ciudad.firstChild) {

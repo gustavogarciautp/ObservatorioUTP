@@ -12,7 +12,7 @@ from app_core.models import Egresado, City, Country
 
 countries=Country.objects.all()
 PAISES=[[x.name,x.name] for x in countries]
-CIUDADES= [[x.name, x.name] for x in City.objects.filter(country_id=countries[0].id)]
+#CIUDADES= [[x.name, x.name] for x in City.objects.filter(country_id=countries[0].id)]
 
 #PAISES=[[x,x] for x in COUNTRIES]
 
@@ -47,14 +47,13 @@ class RegistroForm(forms.Form):
     ), max_length=100)
 
     pais = forms.CharField(label="Pais", required=True, widget= forms.Select(choices=PAISES, attrs={'id':'idpais', 'onchange':'changecountry()'})) 
-    ciudad = forms.CharField(label="ciudad", required=True, widget= forms.Select(choices=CIUDADES, attrs={'id':'ciudades'})) 
+    ciudad = forms.CharField(label="ciudad", required=True, widget= forms.Select(choices=[["init","init"]], attrs={'id':'ciudades'})) 
 
     fecha_nacimiento = forms.DateField(label="Fecha de nacimiento",required =False, widget=forms.SelectDateWidget(months=months, years=years, empty_label=("Año", "Mes", "Día"),)) #campo opcional 
     email = forms.EmailField(label="Email",required=True, widget=forms.EmailInput(
         attrs= {'class':'form-control', 'placeholder':'Escribe tu email'}), max_length=100, min_length=3) #campo opcional
     
     genero= forms.CharField(label="Generos", required=False, widget= forms.Select(choices=GENEROS)) 
-    
 
     contraseña = forms.CharField(label="Contraseña", required=True, widget= forms.PasswordInput(attrs= {'class':'form-control', 'placeholder':'Escribe tu contraseña'})) 
 
@@ -113,6 +112,13 @@ class RegistroForm(forms.Form):
         if not date_born:
             raise forms.ValidationError("Ingrese un afecha válida")
         return date_born
+
+    def clean_confirmacion(self):
+        confirmar= self.cleaned_data['confirmacion']
+        if not confirmar:
+            raise forms.ValidationError("Confirme antes de continuar")
+        return confirmar
+
 
 
 class PerfilForm(forms.ModelForm):

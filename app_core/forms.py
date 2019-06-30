@@ -56,7 +56,8 @@ class AdminForm(forms.ModelForm):
 	def clean_email(self):
 		email = self.cleaned_data['email']
 		if not email.endswith('@utp.edu.co'):
-			raise forms.ValidationError('El email debe ser @utp.edu.co')  	
+			pass
+			#raise forms.ValidationError('El email debe ser @utp.edu.co')  	
 		else:
 			obj=Administrador.objects.filter(email=email)
 			if obj.exists() and self.instance.email!= obj[0].email:
