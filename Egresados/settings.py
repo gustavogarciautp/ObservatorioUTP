@@ -27,9 +27,16 @@ RECAPTCHA_PRIVATE_KEY = '6LdaUqcUAAAAANtBkskWrDSPz2SezQT_i3jsSRon'
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
+#-->DEBUG= False
+
 ALLOWED_HOSTS = []
 
+#-->ALLOWED_HOSTS = ['ObservatorioUTP.pythonanywhere.com', 'localhost', '127.0.0.1']
+
 AUTHENTICATION_BACKENDS=['app_core.backends.SuperUserBackend','app_core.backends.AdminBackend', 'app_core.backends.EgresadoBackend']
+
+
+
 # Application definition
 
 INSTALLED_APPS = [

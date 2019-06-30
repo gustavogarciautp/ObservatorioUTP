@@ -1,5 +1,5 @@
 from django.shortcuts import render, get_object_or_404, redirect
-from .forms import LoginForm, Recuperar1Form, Recuperar2Form
+from .forms import LoginForm, Recuperar1Form, Recuperar2Form, EditProfileForm
 import hashlib
 from .models import Administrador, Egresado, User, SuperUser
 from django.core.mail import EmailMultiAlternatives
@@ -7,6 +7,8 @@ from django.urls import reverse, resolve
 from django.contrib.auth import authenticate, logout
 from django.contrib.auth import login as loginB
 from django.shortcuts import HttpResponseRedirect
+from django.contrib.auth.decorators import login_required
+from django.utils.decorators import method_decorator
 
 # Create your views here.
 def login(request):
@@ -71,12 +73,12 @@ def recuperar_1(request):
             email= request.POST.get('email')
             obj=Egresado.objects.filter(email=email)
             if obj:
-                asunto= 'Restablece tu password'
+                asunto= 'Restablece tu contraseña'
                 #clave= random.randint(1000,100000)
                 clave_cifrada= hashlib.sha1(str(obj.id).encode()).hexdigest()
                 link='http://127.0.0.1:8000/recuperar_2/'+str(clave_cifrada)
 
-                html_content='<p>Ha recibido este correo electrónico porque ha solicitado restablecer la password para su cuenta en <a href="http://127.0.0.1:8000">http://127.0.0.1:8000</a></p></br><p>Por favor vaya a la pagina siguiente y escoja una nueva password.</p></br><a href="http://127.0.0.1:8000/recuperar_2/'+str(clave_cifrada)+'">Recuperar password</a></br><p>Su nombre de usuario en caso de haberlo olvidado.</p></br><p>¡Gracias por usar nuestro sitio!</p></br>El equipo de <a href=" http://127.0.0.1:8000">Observatorio Egresados</a>'
+                html_content='<p>Ha recibido este correo electrónico porque ha solicitado restablecer la contraseña para su cuenta en <a href="http://127.0.0.1:8000">http://127.0.0.1:8000</a></p></br><p>Por favor vaya a la pagina siguiente y escoja una nueva password.</p></br><a href="http://127.0.0.1:8000/recuperar_2/'+str(clave_cifrada)+'">Recuperar contraseña</a></br><p>Su nombre de usuario en caso de haberlo olvidado.</p></br><p>¡Gracias por usar nuestro sitio!</p></br>El equipo de <a href=" http://127.0.0.1:8000">Observatorio Egresados</a>'
                 msg = EmailMultiAlternatives(asunto, content, to=[email])
                 msg.attach_alternative(html_content, "text/html")
                 msg.send()
@@ -120,3 +122,14 @@ def principal(request):
 
 def home(request):
     return render(request, "app_core/index.html")
+
+def EditUser(request):
+    if request.method == 'POST':
+        form = EditProfileForm(request.POST, instance=request.user)
+        if form.is_valid():
+            #Actualizar el objeto
+            user = form.save()
+            return HttpResponseRedirect(reverse('admin_'))
+    else:
+        form = EditProfileForm(instance=request.user)
+    return render(request, 'app_core/user_change.html', {'form': form})

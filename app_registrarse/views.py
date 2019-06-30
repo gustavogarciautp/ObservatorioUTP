@@ -49,7 +49,6 @@ def registrarse(request):
             apellidos = request.POST.get('apellidos')
             pais = request.POST.get('pais')
             pais_obj= Paises.objects.get(pais=pais)
-            print(request.POST)
 
             fecha_nacimiento_month= request.POST.get('fecha_nacimiento_month')
             fecha_nacimiento_day= request.POST.get('fecha_nacimiento_day')

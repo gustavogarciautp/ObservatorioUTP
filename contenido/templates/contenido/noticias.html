@@ -21,7 +21,7 @@
               <img class="mx-auto d-flex rounded img-fluid mb-3 mb-lg-0" src={{publicacion.Image.url}} alt="">
             </p>
             <p class="mb-0 mbt">
-              {{publicacion.descripcion|safe}}  <!--Por defecto django ignora los saltos de linea, para que los tenga en cuenta se utilizar el tag linebreaks-->
+              {{publicacion.descripcion|safe|slice:'0:11'}}  <!--Por defecto django ignora los saltos de linea, para que los tenga en cuenta se utilizar el tag linebreaks-->
             </p>
             <p class="mb-0 mbt">
               <!--<span class="section-heading-under">Publicado por <em><b>{{post.author}}</b></em> en -->

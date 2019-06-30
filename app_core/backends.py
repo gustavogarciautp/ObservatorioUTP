@@ -7,7 +7,14 @@ class AdminBackend:
 		try:
 			print(email)
 			print(password)
-			user = 	Administrador.objects.get(email=email, password=password)
+			#user = 	Administrador.objects.get(email=email, password=password)
+			user = 	Administrador.objects.get(email=email)
+			success=user.check_password(password)
+			print(success)
+			if success:
+				return user
+			else:
+				return None
 			return user
 		except Administrador.DoesNotExist:
 			return None

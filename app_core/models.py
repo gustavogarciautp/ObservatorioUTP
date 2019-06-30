@@ -6,12 +6,12 @@ from django.utils import timezone
 import re
 from cities_light.abstract_models import AbstractCity, AbstractRegion,AbstractCountry
 from cities_light.receivers import connect_default_signals
+from django.dispatch import receiver
+from django.db.models.signals import pre_save, post_save
+from django.utils.crypto import get_random_string
 
-IDENTIFICACION= ["Cédula de ciudadania", "Pasaporte"]
 
-#COUNTRIES=["Afganistán", "Akrotiri", "Albania", "Alemania", "Andorra", "Angola", "Anguila", "Antártida", "Antigua y Barbuda", "Antillas Neerlandesas", "Arabia Saudí", "Arctic Ocean", "Argelia", "Argentina", "Armenia", "Aruba", "Ashmore andCartier Islands", "Atlantic Ocean", "Australia", "Austria", "Azerbaiyán", "Bahamas", "Bahráin", "Bangladesh", "Barbados", "Bélgica", "Belice", "Benín", "Bermudas", "Bielorrusia", "Birmania Myanmar", "Bolivia", "Bosnia y Hercegovina", "Botsuana", "Brasil", "Brunéi", "Bulgaria", "Burkina Faso", "Burundi", "Bután", "Cabo Verde", "Camboya", "Camerún", "Canadá", "Chad", "Chile", "China", "Chipre", "Clipperton Island", "Colombia", "Comoras", "Congo", "Coral Sea Islands", "Corea del Norte", "Corea del Sur", "Costa de Marfil", "Costa Rica", "Croacia", "Cuba", "Dhekelia", "Dinamarca", "Dominica", "Ecuador", "Egipto", "El Salvador", "El Vaticano", "Emiratos Árabes Unidos", "Eritrea", "Eslovaquia", "Eslovenia", "España", "Estados Unidos", "Estonia", "Etiopía", "Filipinas", "Finlandia", "Fiyi", "Francia", "Gabón", "Gambia", "Gaza Strip", "Georgia", "Ghana", "Gibraltar", "Granada", "Grecia", "Groenlandia", "Guam", "Guatemala", "Guernsey", "Guinea", "Guinea Ecuatorial", "Guinea-Bissau", "Guyana", "Haití", "Honduras", "Hong Kong", "Hungría", "India", "Indian Ocean", "Indonesia", "Irán", "Iraq", "Irlanda", "Isla Bouvet", "Isla Christmas", "Isla Norfolk", "Islandia", "Islas Caimán", "Islas Cocos", "Islas Cook", "Islas Feroe", "Islas Georgia del Sur y Sandwich del Sur", "Islas Heard y McDonald", "Islas Malvinas", "Islas Marianas del Norte", "IslasMarshall", "Islas Pitcairn", "Islas Salomón", "Islas Turcas y Caicos", "Islas Vírgenes Americanas", "Islas Vírgenes Británicas", "Israel", "Italia", "Jamaica", "Jan Mayen", "Japón", "Jersey", "Jordania", "Kazajistán", "Kenia", "Kirguizistán", "Kiribati", "Kuwait", "Laos", "Lesoto", "Letonia", "Líbano", "Liberia", "Libia", "Liechtenstein", "Lituania", "Luxemburgo", "Macao", "Macedonia", "Madagascar", "Malasia", "Malaui", "Maldivas", "Malí", "Malta", "Man, Isle of", "Marruecos", "Mauricio", "Mauritania", "Mayotte", "México", "Micronesia", "Moldavia", "Mónaco", "Mongolia", "Montserrat", "Mozambique", "Namibia", "Nauru", "Navassa Island", "Nepal", "Nicaragua", "Níger", "Nigeria", "Niue", "Noruega", "Nueva Caledonia", "Nueva Zelanda", "Omán", "Pacific Ocean", "Países Bajos", "Pakistán", "Palaos", "Panamá", "Papúa-Nueva Guinea", "Paracel Islands", "Paraguay", "Perú", "Polinesia Francesa", "Polonia", "Portugal", "Puerto Rico", "Qatar", "Reino Unido", "República Centroafricana", "República Checa", "República Democrática del Congo", "República Dominicana", "Ruanda", "Rumania", "Rusia", "Sáhara Occidental", "Samoa", "Samoa Americana", "San Cristóbal y Nieves", "San Marino", "San Pedro y Miquelón", "San Vicente y las Granadinas", "Santa Helena", "Santa Lucía", "Santo Tomé y Príncipe", "Senegal", "Seychelles", "Sierra Leona", "Singapur", "Siria", "Somalia", "Southern Ocean", "Spratly Islands", "Sri Lanka", "Suazilandia", "Sudáfrica", "Sudán", "Suecia", "Suiza", "Surinam", "Svalbard y Jan Mayen", "Tailandia", "Taiwán", "Tanzania", "Tayikistán", "TerritorioBritánicodel Océano Indico", "Territorios Australes Franceses", "Timor Oriental", "Togo", "Tokelau", "Tonga", "Trinidad y Tobago", "Túnez", "Turkmenistán", "Turquía", "Tuvalu", "Ucrania", "Uganda", "Unión Europea", "Uruguay", "Uzbekistán", "Vanuatu", "Venezuela", "Vietnam", "Wake Island", "Wallis y Futuna", "West Bank", "World", "Yemen", "Yibuti", "Zambia", "Zimbabue"]  
-
-#PAISES=[[x,x] for x in COUNTRIES]
+IDENTIFICACION= [["Cédula de ciudadania","Cédula de ciudadania"], ["Pasaporte", "Pasaporte"]]
 
 GENEROS= (
     ('Masculino','Masculino'),
@@ -29,39 +29,18 @@ months= {
 }
 
 class Country(AbstractCountry):
-    pass
+    def __str__(self):
+        return self.name
 
 connect_default_signals(Country)
 class Region(AbstractRegion):
     pass
 connect_default_signals(Region)
 class City(AbstractCity):
-    pass
+    def __str__(self):
+        return self.name
 connect_default_signals(City)
 
-"""
-class Paises(models.Model):
-    iso= models.CharField(max_length=4, primary_key=True)
-    pais=models.CharField(max_length=20, null=False, default='', blank=False, choices=PAISES)
-
-    class Meta:
-        verbose_name = 'Pais'
-        verbose_name_plural = "Paises"
-
-    def __str__(self):
-        return self.pais
-
-class Ciudades(models.Model):
-    pais_iso= models.ForeignKey(Paises, on_delete=models.CASCADE)
-    ciudad= models.CharField(max_length=20, null=False, default='', blank=False)
-    autocomplete_fields = ['pais_iso']
-    class Meta:
-        verbose_name = 'Ciudad'
-        verbose_name_plural = "Ciudades"
-
-    def __str__(self):
-        return self.ciudad
-"""
 class SuperUser(AbstractBaseUser):
     email= models.EmailField(verbose_name="Email",default='',null= False, blank= False, unique=True, max_length=255) #campo opcional
     password = models.CharField(verbose_name="Password",default='',null= False, blank= False, max_length=128) #campo opcional
@@ -75,22 +54,13 @@ class SuperUser(AbstractBaseUser):
     REQUIRED_FIELDS = []
 
     def has_perm(self, perm, obj=None):
-        patron=re.compile(r'egresado')
+        patron=re.compile(r'egresado|interes|noticia|city|country|region')
         m= patron.search(perm)
         if m:
             return False
         else:
-            patron=re.compile(r'interes')
-            m=patron.search(perm)
-            if m:
-                return False
-            else:     
-                patron=re.compile(r'noticia')
-                m=patron.search(perm)          
-                if m:
-                    return False
-                else:
-                    return True
+            return True
+
 
     def has_module_perms(self, app_label):
         if app_label=='app_core':
@@ -129,9 +99,11 @@ class MyUserManager(BaseUserManager):
 
 
 class User(AbstractBaseUser):
+    Tipo_de_identificacion = models.CharField(verbose_name= "Identificacion", default='Cédula de ciudadania', null=False, blank=False,max_length=20, choices=IDENTIFICACION)
+    DNI  = models.CharField(verbose_name= "DNI", default= '', null=False, blank=False, max_length=10)
     nombres =models.CharField(verbose_name= "Nombres", default='',max_length=30, blank= False, null=False)
     apellidos = models.CharField(verbose_name= "Apellidos", default='',max_length=30, blank= False, null=False)
-    pais = models.ForeignKey(City, on_delete=models.CASCADE, default='', blank=True, null=True)
+    pais = models.CharField(verbose_name="Pais", default='', null=False, blank= False, max_length=30) 
     email = models.EmailField(verbose_name="Email",default='',null= False, blank= False, unique=True, max_length=255) #campo opcional
     genero = models.CharField(verbose_name="Genero",default='',null= True, blank= True, max_length=10, choices=GENEROS) #campo opcional
     #contraseña = models.CharField(verbose_name="Contraseña",default='',null= False, blank= False, max_length=128) #campo opcional
@@ -158,18 +130,16 @@ class User(AbstractBaseUser):
         return self.email
 
 class Administrador (User):
-    Tipo_de_identificacion = models.CharField(verbose_name= "ID", default='Cédula de ciudadania', null=False, blank=False, max_length=20)
-    DNI  = models.CharField(verbose_name= "DNI", default= '', null=False, blank=False, max_length=10)
     telefono = models.IntegerField(verbose_name= "Telefono", default='', null=True, blank=True)
     direccion = models.CharField(verbose_name= "Direccion", max_length=30, blank= False, null=False)
-    ciudad= models.ForeignKey(City, on_delete= models.CASCADE)
+    ciudad= models.CharField(verbose_name="Ciudad", max_length=30)
     is_active = models.BooleanField(default=True)
     is_egresado = models.BooleanField(default=False)
     is_administrador = models.BooleanField(default=True)
     is_superusuario = models.BooleanField(default=False)
 
     def has_perm(self, perm, obj=None):
-        patron=re.compile(r'administrador')
+        patron=re.compile(r'administrador|city|country|region')
         m= patron.search(perm)
         if m:
             return False
@@ -189,10 +159,19 @@ class Administrador (User):
     def __str__(self):
         return self.nombres
 
+@receiver(post_save, sender= Administrador)
+def make_first_password(sender, instance, **kwargs):
+    if kwargs.get('created', False): #con esto nos aseguramos que la instancia se acaba de crear   
+        """password_gen = get_random_string(length=90)
+        instance.password = password_gen"""
+        print("primeras")
+        instance.set_password("12345678a")
+        print(instance.password)
+        instance.save()
+        print(instance.password)
+
 
 class Egresado (User):
-    Tipo_de_identificacion = models.CharField(verbose_name= "Identificacion", default='Cédula de ciudadania', null=False, blank=False,max_length=20)
-    DNI  = models.CharField(verbose_name= "DNI", default= '', null=False, blank=False, max_length=10)
     activacion= models.BooleanField(verbose_name= "Activacion", default= False, null=True, blank= False)
     fecha_nacimiento = models.DateField(verbose_name="Fecha de nacimiento",null= True, blank= True) #campo opcional
     is_active = models.BooleanField(default=True)

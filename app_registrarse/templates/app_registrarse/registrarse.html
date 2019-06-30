@@ -86,15 +86,16 @@
         <script>
         function changecountry() {
         select_ciudad= document.getElementById("ciudades");
-          while (select_ciudad.firstChild) {
+          /*while (select_ciudad.firstChild) {
               select_ciudad.removeChild(select_ciudad.firstChild);
-          }
+          }*/
          pais=document.getElementById("idpais");
            var country = encodeURIComponent(pais.value); // &
             const url = "{% url 'cities' %}" + "?pais="+country;
             fetch(url, {'credentials':'include'}).then(response => response.json()).then(function(data){
                 var i=0;
                 var ciudad='';
+                 select_ciudad.innerHTML='';
                 for (i=0; i< data['ciudades'].length; i++){
                   ciudad= data['ciudades'][i];
                   ciudad_option = document.createElement('OPTION');

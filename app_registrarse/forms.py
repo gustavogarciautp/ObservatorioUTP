@@ -96,13 +96,12 @@ class RegistroForm(forms.Form):
     def clean_DNI(self):
         IDENTIFICACION= ["Cédula de ciudadania", "Pasaporte"]
         dni= self.cleaned_data['DNI']
-        print(dni)
         Tipo_de_identificacion = self.cleaned_data['Tipo_de_identificacion']
         if  Tipo_de_identificacion==IDENTIFICACION[1]:
             if not dni[0:3].isalpha() and not dni[3:6].isdigit:
-                raise  forms.ValidationError("DNI deber invalido")
+                raise  forms.ValidationError("DNI invalido")
         elif Tipo_de_identificacion==IDENTIFICACION[0]:
-            if len(dni) <8 and len(dni)>10:
+            if len(dni) <8 or len(dni)>10:
                 raise forms.ValidationError("DNI debe tener de 8 a 10 digitos")
             elif not dni.isdigit():
                 raise forms.ValidationError("DNI solo debe contener numeros del 0-9")

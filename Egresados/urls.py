@@ -53,6 +53,7 @@ urlpatterns = [
     path('publicaciones/', include(contenido_patterns)),
 
     path('ciudades/', BuscarCiudades, name="cities"),
+    path('adminprofile/', app_core_views.EditUser, name='perfil_admin'),
 
 ]
 

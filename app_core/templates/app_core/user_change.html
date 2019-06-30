@@ -1,0 +1,71 @@
+{% extends "admin/base_site.html" %}
+{% block content %}
+<div class="containerss" id="cont">
+    <form method="post">
+        {% csrf_token %}
+        {{ form.as_p }}
+	<input id ="button" type="submit" value="Grabar" class="default" name="_save">    
+	</form>
+    <br>
+</div>
+
+<script>
+        window.onload=deleteinit;
+
+        function deleteinit(){
+        select_ciudad= document.getElementById("id_ciudad");
+        select_password= document.getElementById("id_password");
+        select_password.nextElementSibling.remove();
+        select_password.remove();
+        select_button= document.getElementById("button");
+        select_button.previousElementSibling.previousElementSibling.remove();
+        
+        select_genero=document.getElementById("id_genero");
+        select_genero.nextElementSibling.remove();
+        select_genero.className='';
+
+        select_pais=document.getElementById("id_pais");
+        select_pais.nextElementSibling.remove();
+        select_pais.className='';
+
+        select_ciudad.nextElementSibling.remove();
+        select_ciudad.className='';
+
+        select_dni=document.getElementById("id_Tipo_de_identificacion");
+        select_dni.nextElementSibling.remove();
+        select_dni.className='';
+
+      
+
+        if (select_ciudad.value=="init"){
+            changecountry();
+          }
+        }
+        function changecountry() {
+          
+        select_ciudad= document.getElementById("id_ciudad");
+          
+         pais=document.getElementById("id_pais");
+           var country = encodeURIComponent(pais.value); // &
+            const url = "{% url 'cities' %}" + "?pais="+country;
+            fetch(url, {'credentials':'include'}).then(response => response.json()).then(function(data){
+                var i=0;
+                var ciudad='';
+
+                //console.log(data);
+                select_ciudad.innerHTML='';
+                //console.log(select_ciudad.childElementCount);
+
+                for (i=0; i< data['ciudades'].length; i++){
+                  ciudad= data['ciudades'][i];
+                  ciudad_option = document.createElement('OPTION');
+                  ciudad_option.value=ciudad;
+                  ciudad_option.text= ciudad;
+                  select_ciudad.appendChild(ciudad_option);
+                }
+                console.log(select_ciudad.childElementCount);
+            })
+          }
+</script>
+
+{% endblock %}
