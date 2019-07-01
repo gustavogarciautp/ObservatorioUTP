@@ -19,12 +19,12 @@ admin.site.register(Administrador, AdminSuperuser)
 admin.site.unregister(Group)
 
 #Quitar ver sitio
-admin.site.site_url=None
+#admin.site.site_url=None
 
 
 class Admin_Site(AdminSite):
     site_header = "Administrador"
-    site_title = "Portal administratico"
+    site_title = "Portal administrativo"
     index_title = "Bienvenido al portal de administración"
 
 admin_site = Admin_Site(name='admin_site')

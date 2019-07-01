@@ -164,13 +164,13 @@ class Administrador (User):
 @receiver(post_save, sender= Administrador)
 def make_first_password(sender, instance, **kwargs):
     if kwargs.get('created', False): #con esto nos aseguramos que la instancia se acaba de crear   
-        password_gen = get_random_string(length=90)
+        password_gen = get_random_string(length=15)
         #instance.password = password_gen
         instance.set_password(password_gen)
 
         asunto= '!Bienvenido al sitio de administración del Sistema de Egresados UTP!'
 
-        clave=get_random_string(length=15)
+        clave=get_random_string(length=50)
         instance.id_restablecimiento=clave
 
         html_content='<p>Ha recibido este correo electrónico porque ha sido registrada una cuenta de administrador con los siguientes datos:</p></br><p>Nombre de Usuario: '+instance.email+'</p></br><p>Contraseña: '+password_gen+'</p></br><p>Para iniciar sesión por primera vez debera cambiar su actual contraseña, puede hacerlo a través del siguiente enlace:</p></br><p><a href="http://127.0.0.1:8000/change_password/first/'+clave+'">Cambiar contraseña</a></p></br><p>¡Gracias por usar nuestro sitio!</p></br><p>El equipo de <a href=" http://127.0.0.1:8000">Observatorio Egresados</a></p>'
