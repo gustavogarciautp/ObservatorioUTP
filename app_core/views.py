@@ -1,5 +1,5 @@
 from django.shortcuts import render, get_object_or_404, redirect
-from .forms import LoginForm, Recuperar1Form, Recuperar2Form, EditProfileForm
+from .forms import LoginForm, Recuperar1Form, Recuperar2Form, EditProfileForm, FirstLoginAdmin
 from .models import Administrador, Egresado, User, SuperUser
 from django.core.mail import EmailMultiAlternatives
 from django.urls import reverse, resolve 
@@ -104,13 +104,32 @@ def recuperar_2(request, id_recuperacion):
             confirmar_password = request.POST.get('confirmar_password')
             if password==confirmar_password:
                 page.id_restablecimiento=''
-                page.password= hashlib.sha1(password.encode()).hexdigest()
+                page.set_password(password)
                 page.save()
             else:
                 return redirect(reverse('recuperar_2')+'?nomatch')
 
 
     return render(request, "app_core/recuperar_pass_2.html", {'form':recuperar2_form})
+
+
+def first_login_admin(request, id_change):
+    page= get_object_or_404(Administrador, id_restablecimiento=id_change)
+    formulario = FirstLoginAdmin()
+    if request.method == 'POST':
+        formulario = FirstLoginAdmin(data= request.POST)
+        if formulario.is_valid():
+            password_old= request.POST.get('antigua')
+            new_password = request.POST.get('contraseña')
+            confirmar_password = request.POST.get('confirmar_contraseña')
+            if new_password == confirmar_password:
+                page.id_restablecimiento=''
+                page.set_password(new_password)
+                page.save()
+                return redirect(reverse('admin_')+'?changepassword')
+            else:
+                return redirect(reverse('first_login_admin')+'?nomatch')
+    return render(request, "app_core/first_admin_login.html", {'form':formulario})
 
 
 def principal(request):

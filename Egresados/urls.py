@@ -35,7 +35,7 @@ urlpatterns = [
     path('admin_admin/', admin_site.urls, name='admin2'),
 	path('accounts/', include('django.contrib.auth.urls')),    
     path('recuperar_1/', app_core_views.recuperar_1, name='recuperar_1'),
-    path('recuperar_2/', include('app_core.urls'), name='recuperar_1'),
+    path('recuperar_2/', include('app_core.urls')),
     
     path('principal/', app_core_views.principal, name='principal'),
     
@@ -54,6 +54,8 @@ urlpatterns = [
 
     path('ciudades/', BuscarCiudades, name="cities"),
     path('adminprofile/', app_core_views.EditUser, name='perfil_admin'),
+
+    path('change_password/first/<id_change>/', app_core_views.first_login_admin, name="first_admin_login"),
 
 ]
 

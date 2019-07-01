@@ -15,7 +15,7 @@
   <div class="contain">
     <div class="wrapper"></div>
       <div class="contacts" align="center">
-        <h1>FORMULARIO DE REGISTRO</h1>
+        <h2>FORMULARIO DE REGISTRO</h2>
       </div>
       <br>
       <div class="form">
@@ -28,7 +28,6 @@
           <p>
              <label for="DNI">DNI:</label>
              {{form.DNI}}
-             {{form.DNI.errors}}
           </p>
           <p>
             <label for="username">Nombre:</label>
@@ -45,6 +44,7 @@
              {{form.pais}}
           </p>
           <p>
+            <label>Ciudad:</label>
             {{form.ciudad}}
           </p>
           <p>
@@ -69,33 +69,35 @@
             {{form.contraseña}}
             {{form.contraseña.errors}}
           </p>
-          <div>
-          {{form.confirmacion}}
-          <label for="confirmacion">Confirma qu</label>      
-          {{form.confirmacion.errors}} 
-          </div>
-          <!--
+        
           <p>
             <div class="full-width" align="center">
-             {{form.captcha}}              
+              {{form.captcha}}              
             </div>                 
           </p>
-          -->
+
+          <div class="full-width2">
+          <p>             
+            <h6>Confirma que confía en el Sistema de Egresados para el manejo de datos sensibles</h6>                         
+          </p>
+          </div>
+          <p>
+            {{form.confirmacion}}                  
+            {{form.confirmacion.errors}}
+          </p>
+
           <p class="full-width">
             <input type="submit" value="ENVIAR INFORMACIÓN">
           </p>
         </form>
         <script>
-        window.onload=deleteinit;
-
+         window.onload=deleteinit;
         function deleteinit(){
         select_ciudad= document.getElementById("ciudades");
         if (select_ciudad.value=="init"){
             changecountry();
           }
         }
-
-
         function changecountry() {
         select_ciudad= document.getElementById("ciudades");
           /*while (select_ciudad.firstChild) {

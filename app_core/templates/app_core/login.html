@@ -53,18 +53,22 @@
               	<p><b>Email y contraseña no coinciden</b></p>
               	{% elif 'registrado' in request.GET %}
               	<p><b>Se ha registrado exitosamente.</b></p>
+              	{% elif 'changepassword' in request.GET %}
+              	<p><b>Cambio de contraseña exitoso.</b></p>
             {% endif %}
 			</div>
-			{% if url == "login_" or url == "admin_" %}
 			<div class="card-footer">
+				{% if url == "login_" %}
 				<div class="d-flex justify-content-center links">
 					¿No tienes una cuenta?<a href="{% url 'registrarse' %}">Registrarse</a>
 				</div>
+				{% endif %}
+				{% if url == "login_" or url == "admin_" %}
 				<div class="d-flex justify-content-center">
 					<a href="{% url 'recuperar_1' %}">¿Olvidaste tu contraseña?</a>
 				</div>
+				{% endif %}
 			</div>
-			{% endif %}
 		</div>
 	</div>
 </div>

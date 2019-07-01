@@ -110,7 +110,7 @@ class User(AbstractBaseUser):
     email = models.EmailField(verbose_name="Email",default='',null= False, blank= False, unique=True, max_length=255) #campo opcional
     genero = models.CharField(verbose_name="Genero",default='',null= True, blank= True, max_length=10, choices=GENEROS) #campo opcional
     #contraseña = models.CharField(verbose_name="Contraseña",default='',null= False, blank= False, max_length=128) #campo opcional
-    id_restablecimiento = models.CharField(verbose_name="Id Recuperacion", default='', null=True, blank=True, max_length=60)
+    id_restablecimiento = models.CharField(verbose_name="Id Recuperacion", default='', null=True, blank=True, max_length=180)
     is_staff = models.BooleanField(default=True)
     is_superuser = models.BooleanField(default=True)
     password = models.CharField(verbose_name="Password",default='',null= False, blank= False, max_length=128) #campo opcional
@@ -167,16 +167,17 @@ def make_first_password(sender, instance, **kwargs):
         password_gen = get_random_string(length=90)
         #instance.password = password_gen
         instance.set_password(password_gen)
-        instance.save()
 
         asunto= '!Bienvenido al sitio de administración del Sistema de Egresados UTP!'
 
-        link="http://127.0.0.1:8000/change_password/first/"+get_random_string(length=90)
+        clave=get_random_string(length=15)
+        instance.id_restablecimiento=clave
 
-        html_content='<p>Ha recibido este correo electrónico porque ha sido registrada una cuenta de administrador con los siguientes datos:</p></br><p>Nombre de Usuario: '+instance.email+'</p></br><p>Contraseña: '+password_gen+'</p></br><p>Para iniciar sesión por primera vez debera cambiar su actual contraseña, puede hacerlo a través del siguiente enlace:</p></br><p><a href="http://127.0.0.1:8000/change_password/first/'+get_random_string(length=90)+'">Cambiar contraseña</a></p></br><p>¡Gracias por usar nuestro sitio!</p></br><p>El equipo de <a href=" http://127.0.0.1:8000">Observatorio Egresados</a></p>'
+        html_content='<p>Ha recibido este correo electrónico porque ha sido registrada una cuenta de administrador con los siguientes datos:</p></br><p>Nombre de Usuario: '+instance.email+'</p></br><p>Contraseña: '+password_gen+'</p></br><p>Para iniciar sesión por primera vez debera cambiar su actual contraseña, puede hacerlo a través del siguiente enlace:</p></br><p><a href="http://127.0.0.1:8000/change_password/first/'+clave+'">Cambiar contraseña</a></p></br><p>¡Gracias por usar nuestro sitio!</p></br><p>El equipo de <a href=" http://127.0.0.1:8000">Observatorio Egresados</a></p>'
         msg = EmailMultiAlternatives(asunto, '', to=[instance.email])
         msg.attach_alternative(html_content, "text/html")
         msg.send()
+        instance.save()
 
 
 

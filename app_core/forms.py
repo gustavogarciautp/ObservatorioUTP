@@ -21,6 +21,13 @@ class Recuperar2Form(forms.Form):
 	contraseña = forms.CharField(label="Contraseña", required=True, widget= forms.PasswordInput(attrs= {'class':'form-control', 'placeholder':'Nueva contraseña'})) 
 	confirmar_contraseña = forms.CharField(label="confirmar_Contraseña", required=True, widget= forms.PasswordInput(attrs= {'class':'form-control', 'placeholder':'Confirmar contraseña'})) 
 
+class FirstLoginAdmin(forms.Form):
+	antigua = forms.CharField(label= "Contraseña Antigua", required=True, widget= forms.PasswordInput(attrs= {'class':'form-control', 'placeholder':'Antigua contraseña'}))
+	contraseña = forms.CharField(label="Contraseña", required=True, widget= forms.PasswordInput(attrs= {'class':'form-control', 'placeholder':'Nueva contraseña'})) 
+	confirmar_contraseña = forms.CharField(label="confirmar_Contraseña", required=True, widget= forms.PasswordInput(attrs= {'class':'form-control', 'placeholder':'Confirmar contraseña'})) 
+
+
+
 class AdminForm(forms.ModelForm):
 	def __init__(self, *args, **kwargs):
 		super(AdminForm, self).__init__(*args, **kwargs)
@@ -56,8 +63,7 @@ class AdminForm(forms.ModelForm):
 	def clean_email(self):
 		email = self.cleaned_data['email']
 		if not email.endswith('@utp.edu.co'):
-			pass
-			#raise forms.ValidationError('El email debe ser @utp.edu.co')  	
+			raise forms.ValidationError('El email debe ser @utp.edu.co')  	
 		else:
 			obj=Administrador.objects.filter(email=email)
 			if obj.exists() and self.instance.email!= obj[0].email:
