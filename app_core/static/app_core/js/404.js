@@ -1,4 +1,7 @@
+console.log("lopp")
+
 var formatThousandsNoRounding = function(n, dp){
+    console.log("jeje")
   var e = '', s = e+n, l = s.length, b = n < 0 ? 1 : 0,
       i = s.lastIndexOf(','), j = i == -1 ? l : i,
       r = e, d = s.substr(j+1, dp);
@@ -11,7 +14,9 @@ var formatThousandsNoRounding = function(n, dp){
 var hasRun = false;
 
 inView('#countUp').on('enter', function() {
+    console.log("dfrgr")
     if (hasRun == false) {
+        console.log("pepe")
         $('.number').each(function() {
             var $this = $(this),
                 countTo = $this.attr('data-count');
@@ -30,6 +35,7 @@ inView('#countUp').on('enter', function() {
                 }
             });
         });
+        console.log("lol")
         hasRun = true;
     }
 });

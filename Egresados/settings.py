@@ -40,7 +40,6 @@ AUTHENTICATION_BACKENDS=['app_core.backends.SuperUserBackend','app_core.backends
 # Application definition
 
 INSTALLED_APPS = [
-    #'grappelli',
     'jet',
     'django.contrib.admin',
     'django.contrib.auth',

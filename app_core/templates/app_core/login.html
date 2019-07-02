@@ -48,13 +48,15 @@
 
 				</form>
 				{% if 'fail' in request.GET %}
-              	<p><b>La cuenta no ha sido activada</b></p>
+              	<p style="color:white;"><b>La cuenta no ha sido activada</b></p>
               	{% elif 'nofound' in request.GET %}
-              	<p><b>Email y contraseña no coinciden</b></p>
+              	<p style="color:white;"><b>Email y contraseña no coinciden</b></p>
               	{% elif 'registrado' in request.GET %}
-              	<p><b>Se ha registrado exitosamente.</b></p>
+              	<p style="color:white;"><b>Se ha registrado exitosamente.</b></p>
               	{% elif 'changepassword' in request.GET %}
-              	<p><b>Cambio de contraseña exitoso.</b></p>
+              	<p style="color:white;"><b>Cambio de contraseña exitoso.</b></p>
+              	{% elif 'recuperado' in request.GET %}
+              	<p style="color:white;"><b>Ahora puede iniciar sesión con su nueva contraseña.</b></p>
             {% endif %}
 			</div>
 			<div class="card-footer">

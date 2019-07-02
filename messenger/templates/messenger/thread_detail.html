@@ -45,7 +45,7 @@
             <!-- Recorremos los miembros del hilo menos el propio request.user -->
             {% for user in thread.users.all %}
               {% if user != request.user %}       
-                <h4 class="mb-4">Mensajes con <a href="{% url 'profiles:detail' user %} ">{{user}}</a></h4>
+                <h4 class="mb-4">Mensajes con <a href="{% url 'profiles:detail' user.email %} ">{{user}}</a></h4>
               {% endif %}
             {% endfor %}
             <!-- Mostramos los mensajes en una capa que tiene un overflow vertical de 300 píxeles -->

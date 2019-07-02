@@ -107,7 +107,7 @@ class User(AbstractBaseUser):
     apellidos = models.CharField(verbose_name= "Apellidos", default='',max_length=30, blank= False, null=False)
     pais = models.CharField(verbose_name="Pais", default='', null=False, blank= False, max_length=30) 
     ciudad= models.CharField(verbose_name="Ciudad", max_length=30, default='')
-    email = models.EmailField(verbose_name="Email",default='',null= False, blank= False, unique=True, max_length=255) #campo opcional
+    email = models.EmailField(verbose_name="Email",default='',null= False, blank= False, unique=False, max_length=255) #campo opcional
     genero = models.CharField(verbose_name="Genero",default='',null= True, blank= True, max_length=10, choices=GENEROS) #campo opcional
     #contraseña = models.CharField(verbose_name="Contraseña",default='',null= False, blank= False, max_length=128) #campo opcional
     id_restablecimiento = models.CharField(verbose_name="Id Recuperacion", default='', null=True, blank=True, max_length=180)

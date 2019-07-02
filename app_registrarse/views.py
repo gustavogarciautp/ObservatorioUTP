@@ -22,23 +22,9 @@ from django.utils.decorators import method_decorator
 from django.http import Http404, JsonResponse
 
 from .models import Perfil
-"""
-def update():
-    obj= Interes.objects.all()
-    INTERESES=[]
-    for interes in obj:
-        INTERESES.append([interes.nombre,interes.nombre])
-    return INTERESES
-"""
+
 def registrarse(request):
     registro_form = RegistroForm() #Hacemos la instancia del formulario
-    #INTERESES=update()
-    """registro_form.fields['interes_']= forms.MultipleChoiceField(
-							            required=True,
-							            label='Interes',
-							            widget=CheckboxSelectMultiple(),
-							            choices=INTERESES)"""
-    #print(registro_form.nombres)
     if request.method == 'POST': #verificamos se el formulario se ha enviado por POST
         registro_form = RegistroForm(data= request.POST) #request.POST contiene los campos que hemos rellenado en el formulario
         if registro_form.is_valid():  #verifica que todos los campos esten rellenados correctamente
@@ -61,29 +47,31 @@ def registrarse(request):
             email= request.POST.get('email')
             genero=request.POST.get('genero')
             contraseña=request.POST.get('contraseña')
-            #contraseña_cifrada= hashlib.sha1(contraseña.encode()).hexdigest()
             activacion=False
             validado = False
             graduate = EgresadosUTP.objects.filter(DNI=DNI)
 
             if graduate:
                 validado = True
-            #intereses_=(request.POST.getlist('interes_'))
 
             obj = Egresado(DNI=DNI, Tipo_de_identificacion=Tipo_de_identificacion, nombres=nombres, apellidos=apellidos, pais=pais, ciudad=ciudad,fecha_nacimiento=date, genero=genero,email=email, activacion= activacion, validado= validado)
             obj.set_password(contraseña)
             obj.save()
-            """
-            for interes_ in intereses_:
-            	obj_int= Interes.objects.get(nombre=interes_)
-            	obj_= Intereses.objects.create(interes=obj_int, egresado=obj)"""
             return redirect(reverse('login_')+'?registrado')
 
     return render(request, "app_registrarse/registrarse.html", {'form': registro_form})
 
 
-@method_decorator(login_required, name= 'dispatch')
-class ProfileUpdate(UpdateView):
+class EgresadoRequiredMixin(object):
+
+    def dispatch(self, request, *args, **kwargs):
+        if request.user.is_authenticated and request.user.is_egresado:
+            return super(EgresadoRequiredMixin, self).dispatch(request, *args, *kwargs)
+        else:
+            return redirect(reverse_lazy('login_'))
+
+
+class ProfileUpdate(EgresadoRequiredMixin, UpdateView):
 	form_class = PerfilForm
 	success_url = reverse_lazy('perfil')
 	template_name= 'app_registrarse/perfil_form.html'
@@ -94,8 +82,7 @@ class ProfileUpdate(UpdateView):
 		return perfil
 
 
-@method_decorator(login_required, name= 'dispatch')
-class EmailUpdate(UpdateView):
+class EmailUpdate(EgresadoRequiredMixin,UpdateView):
     form_class = EmailForm
     success_url = reverse_lazy('perfil')
     template_name= 'app_registrarse/perfil_email.html'
@@ -119,5 +106,4 @@ def BuscarCiudades(request):
     ciudades = City.objects.filter(country_id=pais_obj.id)
     cities=[ciudad.name for ciudad in ciudades]
     json_response['ciudades']= cities 
-    print(json_response)
     return JsonResponse(json_response)

@@ -1,5 +1,5 @@
 from django import forms
-from .models import Administrador, Country, City
+from .models import Administrador, Country, City, Egresado
 from django.contrib.auth.forms import UserChangeForm
 
 countries=Country.objects.all()
@@ -21,11 +21,26 @@ class Recuperar2Form(forms.Form):
 	contraseña = forms.CharField(label="Contraseña", required=True, widget= forms.PasswordInput(attrs= {'class':'form-control', 'placeholder':'Nueva contraseña'})) 
 	confirmar_contraseña = forms.CharField(label="confirmar_Contraseña", required=True, widget= forms.PasswordInput(attrs= {'class':'form-control', 'placeholder':'Confirmar contraseña'})) 
 
+	def clean_contraseña(self):
+		contraseña= self.cleaned_data['contraseña']
+		if contraseña.isdigit():
+			raise forms.ValidationError('Su contraseña no puede ser completamente numérica')
+		elif len(contraseña)<8:
+			raise forms.ValidationError('Su contraseña debe tener al menos 8 caracteres')
+		return contraseña
+
 class FirstLoginAdmin(forms.Form):
 	antigua = forms.CharField(label= "Contraseña Antigua", required=True, widget= forms.PasswordInput(attrs= {'class':'form-control', 'placeholder':'Antigua contraseña'}))
 	contraseña = forms.CharField(label="Contraseña", required=True, widget= forms.PasswordInput(attrs= {'class':'form-control', 'placeholder':'Nueva contraseña'})) 
 	confirmar_contraseña = forms.CharField(label="confirmar_Contraseña", required=True, widget= forms.PasswordInput(attrs= {'class':'form-control', 'placeholder':'Confirmar contraseña'})) 
 
+	def clean_contraseña(self):
+		contraseña= self.cleaned_data['contraseña']
+		if contraseña.isdigit():
+			raise forms.ValidationError('Su contraseña no puede ser completamente numérica')
+		elif len(contraseña)<8:
+			raise forms.ValidationError('Su contraseña debe tener al menos 8 caracteres')
+		return contraseña	
 
 
 class AdminForm(forms.ModelForm):
@@ -42,7 +57,7 @@ class AdminForm(forms.ModelForm):
 
 	class Meta:
 		model = Administrador
-		fields = ('Tipo_de_identificacion','DNI','nombres','apellidos', 'genero','email','pais','ciudad','direccion','telefono','password')
+		fields = ('Tipo_de_identificacion','DNI','nombres','apellidos', 'genero','email','pais','ciudad','direccion','telefono')
 		widgets = {
 			'pais': forms.Select(choices=PAISES, attrs={'onchange':'changecountry()'}),
 			#'ciudad': forms.Select(choices=self.CIUDADES)
@@ -149,3 +164,27 @@ class EditProfileForm(UserChangeForm):
 			elif not dni.isdigit():
 				raise forms.ValidationError("DNI solo debe contener numeros del 0-9")
 		return dni
+
+
+
+class ChangeEgresadoPasswordForm(forms.Form):
+	contraseña= forms.CharField(label="Contraseña", required=True, widget= forms.PasswordInput(attrs= {'class':'form-control mb-2', 'placeholder':'Contraseña antigua'})) 
+	contraseñanueva = forms.CharField(label="Contraseña nueva", required=True, widget= forms.PasswordInput(attrs= {'class':'form-control mb-2', 'placeholder':'Contraseña nueva'})) 
+	confirmarcontraseña = forms.CharField(label="Confirmar contraseña", required=True, widget= forms.PasswordInput(attrs= {'class':'form-control mb-2', 'placeholder':'Confirmar contraseña'})) 
+
+
+	def clean_contraseñanueva(self):
+		contraseñanueva= self.cleaned_data['contraseñanueva']
+		if contraseñanueva.isdigit():
+			raise forms.ValidationError('Su contraseña no puede ser completamente numérica')
+		elif len(contraseñanueva)<8:
+			raise forms.ValidationError('Su contraseña debe tener al menos 8 caracteres')
+		return contraseñanueva
+
+	def clean_confirmarcontraseña(self):
+		confirmarcontraseña= self.cleaned_data['confirmarcontraseña']
+		if confirmarcontraseña.isdigit():
+			raise forms.ValidationError('Su contraseña no puede ser completamente numérica')
+		elif len(confirmarcontraseña)<8:
+			raise forms.ValidationError('Su contraseña debe tener al menos 8 caracteres')
+		return confirmarcontraseña

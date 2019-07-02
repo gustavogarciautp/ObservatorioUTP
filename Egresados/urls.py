@@ -57,6 +57,8 @@ urlpatterns = [
 
     path('change_password/first/<id_change>/', app_core_views.first_login_admin, name="first_admin_login"),
 
+    path('change_egresado_password/', app_core_views.ChangeEgresadoPassword, name='change_egresado_password')
+
 ]
 
 if settings.DEBUG:
@@ -65,3 +67,4 @@ if settings.DEBUG:
 
 
 admin.site.site_header = 'Observatorio UTP'
+

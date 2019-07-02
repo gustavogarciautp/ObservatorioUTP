@@ -110,7 +110,7 @@ class RegistroForm(forms.Form):
     def clean_fecha_nacimiento(self):
         date_born= self.cleaned_data['fecha_nacimiento']
         if not date_born:
-            raise forms.ValidationError("Ingrese un afecha válida")
+            raise forms.ValidationError("Ingrese una fecha válida")
         return date_born
 
     def clean_confirmacion(self):
@@ -131,7 +131,7 @@ class PerfilForm(forms.ModelForm):
         }
 
 class EmailForm(forms.ModelForm):
-    email = forms.EmailField(required=True, help_text="Requerido. 254 carácteres como máximo y deve ser válido")
+    email = forms.EmailField(required=True, help_text="Requerido. 254 carácteres como máximo y debe ser válido")
 
     class Meta:
         model = Egresado

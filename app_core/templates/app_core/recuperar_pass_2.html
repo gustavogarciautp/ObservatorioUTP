@@ -27,7 +27,7 @@
 				<h3>Restablecer contraseña</h3>
 			</div>
 			<p>
-				Restableciendo contraseña
+				<font color="white">Restableciendo contraseña</font>
 			</p>
 			<div class="card-body">
 				<form action="" method="POST">
@@ -37,15 +37,17 @@
 							<span class="input-group-text"><i class="fas fa-key"></i></span>
 						</div>
 						{{form.contraseña}}
+						{{form.contraseña.errors}}
 					</div>
 					<div class="input-group form-group">
 						<div class="input-group-prepend">
 							<span class="input-group-text"><i class="fas fa-key"></i></span>
 						</div>
 						{{form.confirmar_contraseña}}
+						{{form.confirmar_contraseña.errors}}
 					</div>	
 					{% if 'nomatch' in request.GET %}
-              		<p><b>Las contraseñas no coinciden</b></p>	
+              		<p><font color="white"><b>Las contraseñas no coinciden</b></font></p>	
               		{% endif %}		
 					<div class="form-group">
 						<input type="submit" value="Guardar" class="btn float-right login_btn">

@@ -13,10 +13,10 @@
               {% if perfil.avatar %}
                 <img src="{{perfil.avatar.url}}" class="img-fluid">
               {% else %}
-                <img src="{% static 'registration/img/no-avatar.jpg' %}" class="img-fluid">
+                <img src="{% static 'app_registrarse/img/no-avatar.jpg' %}" class="img-fluid">
               {% endif %}
-              {% if request.user != profile.user %}
-                <a href="{% url 'messenger:start' perfil.user.nombres %}" class="btn btn-primary btn-sm btn-block mt-3">
+              {% if request.user != perfil.user %}
+                <a href="{% url 'messenger:start' perfil.user.email %}" class="btn btn-primary btn-sm btn-block mt-3">
                   Enviar mensaje
                 </a>
               {% endif %}

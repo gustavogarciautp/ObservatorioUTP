@@ -26,16 +26,16 @@
 			<div class="card-header">
 				<h3>Restablecer contraseña</h3>
 			</div>
-			<p>
+			<div class="card-body">
+				{% if 'send' in request.GET %}
+              	<p><font color="white"><b>Revise su bandeja de entrada para los próximos pasos. Si no recibe un correo electrónico y no está en su carpeta de correo no deseado, esto podría significar que se registró con un correo electrónico diferente.</b></font></p>
+              	{% else %}
+              	<p>
 				<font color="white">
 					Ingrese su dirección de correo electrónico a continuación y le enviaremos un enlace para restablecer su contraseña.
 				</font>
 				
-			</p>
-			<div class="card-body">
-				{% if 'send' in request.GET %}
-              	<p><b>Revise su bandeja de entrada para los próximos pasos. Si no recibe un correo electrónico y no está en su carpeta de correo no deseado, esto podría significar que se registró con una dirección diferente.</b></p>
-              	{% else %}
+				</p>
 				<form action="" method="POST">
 					{% csrf_token %}
 					<div class="input-group form-group">
@@ -43,7 +43,7 @@
 							<span class="input-group-text"><i class="fas fa-user"></i></span>
 						</div>
 						{{form.email}}
-						
+						{{form.errors}}					
 					</div>
 					<div class="form-group">
 						<input type="submit" value="Restablecer la contraseña" class="btn float-right login_btn">
@@ -59,7 +59,7 @@
 			{% endif %}
 			<div class="card-footer">
 				<div class="d-flex justify-content-center links">
-					<a href="{% url 'login' %}">Inicia sesión</a>  o <a href="{% url 'registrarse' %}">Registrate</a>
+					<a href="{% url 'login_' %}">Inicia sesión</a>  o <a href="{% url 'registrarse' %}">Registrate</a>
 				</div>
 			</div>
 		</div>

@@ -16,6 +16,11 @@ class Perfil(models.Model):
 
     class Meta:
         ordering = ['user__nombres']
+        verbose_name = 'Perfil'
+        verbose_name_plural = 'Perfil'
+
+    def __str__(self):
+        return self.user.nombres
 
 #Confirma que el perfil siempre existe
 
