@@ -1,7 +1,7 @@
 # Create your views here.
 
 from django.shortcuts import render, redirect ##redirect sirve para redireccionar paginas
-from .forms import RegistroForm, PerfilForm, EmailForm
+from .forms import RegistroForm, EgresadoForm, EmailForm, EgresadoForm, InteresesForm
 from django.core.mail import EmailMessage
 from django.urls import reverse
 from  app_core.models import Egresado, Interes, Intereses, EgresadosUTP, Country, City
@@ -22,6 +22,42 @@ from django.utils.decorators import method_decorator
 from django.http import Http404, JsonResponse
 
 from .models import Perfil
+
+years=[i for i in range(1930,1998)]
+
+
+months= {
+    1: ('Enero'), 2: ('Febrero'), 3: ('Marzo'), 4: ('Abril'), 5: ('Mayo'), 6: ('Junio'),
+    7: ('Julio'), 8: ('Agosto'), 9: ('Septiembre'), 10: ('Octubre'), 11: ('Noviembre'),
+    12: ('Diciembre')
+    }
+
+def update():
+    obj= Interes.objects.all()
+    INTERESES=[]
+    for interes in obj:
+        INTERESES.append([interes.nombre,interes.nombre])
+    return INTERESES
+
+def intereses (request):
+    intereses= InteresesForm()
+    INTERESES=update()
+    intereses.fields['Interes'].choices=INTERESES
+    if request.method == 'POST': #verificamos se el formulario se ha enviado por POST
+        intereses = InteresesForm(data= request.POST) #request.POST contiene los campos que hemos rellenado en el formulario
+        if intereses.is_valid():
+            intereses_=(request.POST.getlist('Interes'))
+            obj=Egresado.objects.get(email=request.user.email)
+
+            for interes_ in intereses_:
+                obj_int= Interes.objects.get(nombre=interes_)
+                obj_= Intereses.objects.create(interes=obj_int, egresado=obj)
+    return render(request, "app_registrarse/intereses.html", {'form':InteresesForm})
+
+
+
+
+
 
 def registrarse(request):
     registro_form = RegistroForm() #Hacemos la instancia del formulario
@@ -72,14 +108,17 @@ class EgresadoRequiredMixin(object):
 
 
 class ProfileUpdate(EgresadoRequiredMixin, UpdateView):
-	form_class = PerfilForm
-	success_url = reverse_lazy('perfil')
-	template_name= 'app_registrarse/perfil_form.html'
- 
-	def get_object(self):
-		#recuperar el objeto que se va a editar
-		perfil, creado= Perfil.objects.get_or_create(user=self.request.user)
-		return perfil
+    form_class = EgresadoForm
+    success_url = reverse_lazy('perfil')
+    template_name= 'app_registrarse/perfil_form.html'
+    def get_object(self):
+        return self.request.user
+    def get_form(self,form_class=None):
+        form = super(ProfileUpdate, self).get_form()
+       
+        form.fields['fecha_nacimiento'].widget=forms.SelectDateWidget(months=months, years=years, empty_label=("Año", "Mes", "Día"),)
+
+        return form
 
 
 class EmailUpdate(EgresadoRequiredMixin,UpdateView):

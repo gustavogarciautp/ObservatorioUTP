@@ -10,7 +10,7 @@ class NoticiaAdmin(admin.ModelAdmin):
 
 	class  Media :
 		css = {
-		' all ' : ('contenido/css/custom_ckeditor.css',)
+		'all': ('contenido/css/custom_ckeditor.css',)
 	}
 # Register your models here.
 admin_site.register(Noticia, NoticiaAdmin)

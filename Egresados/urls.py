@@ -38,7 +38,7 @@ urlpatterns = [
     path('', app_core_views.home, name="home_page"),
     path('jet/', include('jet.urls', 'jet')),
 	path('login/', app_core_views.login,name='login_'),
-    
+    path('intereses/', app_registrarse_views.intereses, name='intereses'),
     path('ad-min/', app_core_views.login, name='admin_'),
     path('admin_admin/login/', app_core_views.login),
     path('admin_admin/', admin_site.urls, name='admin2'),

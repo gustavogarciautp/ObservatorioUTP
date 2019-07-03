@@ -30,6 +30,12 @@ months= {
     12: ('Diciembre')
 }
 
+def custom_upload_to(instance, filename):
+    old_instance = Egresado.objects.get(pk=instance.pk)
+    old_instance.avatar.delete()
+    return 'profiles/'+filename
+
+
 class Country(AbstractCountry):
     def __str__(self):
         return self.name
@@ -182,14 +188,22 @@ def make_first_password(sender, instance, **kwargs):
 
 
 class Egresado (User):
-    activacion= models.BooleanField(verbose_name= "Activacion", default= False, null=False, blank= False)
+    activacion= models.BooleanField(verbose_name= "Activacion", default= False, null=True, blank= False)
     fecha_nacimiento = models.DateField(verbose_name="Fecha de nacimiento",null= True, blank= True) #campo opcional
     is_active = models.BooleanField(default=True)
     is_egresado = models.BooleanField(default=True)
     is_administrador = models.BooleanField(default=False)
     is_superusuario = models.BooleanField(default=False)
     validado = models.BooleanField(default= False)
-
+    avatar = models.ImageField(upload_to= custom_upload_to, null=True, blank=True)
+    avatar_p = models. BooleanField(null = False, blank = False, default = True)
+    bio_p = models. BooleanField(null = False, blank = False, default = True)
+    nombres_p = models. BooleanField(null = False, blank = False, default = True)
+    fecha_p = models. BooleanField(null = False, blank = False, default = True)
+    email_p = models. BooleanField(null = False, blank = False, default = True)
+    pais_p = models. BooleanField(null = False, blank = False, default = True)
+    bio= models.TextField(null=True, blank=True)
+    
     class Meta:
         verbose_name = 'Egresado'
         verbose_name_plural= 'Egresados'
@@ -206,6 +220,7 @@ class Egresado (User):
 
     def __str__(self):
         return self.nombres
+
 
 
 class Interes(models.Model):

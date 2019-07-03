@@ -1,7 +1,7 @@
 from django import forms
 from captcha.fields import ReCaptchaField
 from captcha.widgets import ReCaptchaV2Checkbox
-from app_core.models import Interes, EgresadosUTP
+from app_core.models import Interes, EgresadosUTP, Egresado
 from django.forms.widgets import CheckboxSelectMultiple
 from django.views.generic.base import TemplateView
 from .models import Perfil
@@ -32,6 +32,21 @@ months= {
 }
 
 IDENTIFICACION= [["Cédula de ciudadania","Cédula de ciudadania"],[ "Pasaporte","Pasaporte"]]
+
+
+def update():
+    obj= Interes.objects.all()
+    INTERESES=[]
+    for interes in obj:
+        print(interes.nombre)
+        INTERESES.append([interes.nombre,interes.nombre])
+    return INTERESES
+
+class InteresesForm(forms.Form):
+    INTERESES=update()
+    Interes= forms.MultipleChoiceField(required=True,label='Interes',widget=CheckboxSelectMultiple(),choices=INTERESES)
+
+
 
 class RegistroForm(forms.Form):
 
@@ -121,13 +136,16 @@ class RegistroForm(forms.Form):
 
 
 
-class PerfilForm(forms.ModelForm):
+class EgresadoForm(forms.ModelForm):
     class Meta:
-        model = Perfil
-        fields = ['avatar', 'bio']
+        model = Egresado
+        fields = ['pais', 'fecha_nacimiento', 'bio', 'avatar', 'nombres', 'apellidos', 'avatar_p', 'pais_p','bio_p', 'nombres_p', 'fecha_p', 'email_p']
+
         widgets = {
             'avatar': forms.ClearableFileInput(attrs={'class': 'form-control-file mt-3'}),
-            'bio': forms.Textarea(attrs={'class':'form-control mt-3', 'rows':3, 'placeholder': 'Biografia'})
+            'bio': forms.Textarea(attrs={'class':'form-control mt-3', 'rows':3, 'placeholder': 'Biografia'}),
+            'avatar_p': forms.CheckboxInput()
+
         }
 
 class EmailForm(forms.ModelForm):
