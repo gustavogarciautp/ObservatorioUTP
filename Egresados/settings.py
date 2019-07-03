@@ -162,6 +162,7 @@ LOGOUT_REDIRECT_URL='/login/'
 
 CITIES_LIGHT_APP_NAME= 'app_core'
 
+"""
 CKEDITOR_CONFIGS = {
     'default': {
         'toolbar': 'Custom',
@@ -171,4 +172,13 @@ CKEDITOR_CONFIGS = {
             ['Link', 'Unlink'],
         ]
     }
+}
+"""
+
+CKEDITOR_CONFIGS = {
+    'default': {
+        'toolbar': 'full',
+        'height': 300,
+        'width': 'auto',
+    },
 }

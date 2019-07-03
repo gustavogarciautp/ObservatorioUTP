@@ -54,7 +54,7 @@ def registrarse(request):
             if graduate:
                 validado = True
 
-            obj = Egresado(DNI=DNI, Tipo_de_identificacion=Tipo_de_identificacion, nombres=nombres, apellidos=apellidos, pais=pais, ciudad=ciudad,fecha_nacimiento=date, genero=genero,email=email, activacion= activacion, validado= validado)
+            obj = Egresado(DNI=DNI, Tipo_de_identificacion=Tipo_de_identificacion, nombres=nombres, apellidos=apellidos, pais=pais, ciudad=ciudad,fecha_nacimiento=date, genero=genero,email=email, activacion= activacion, validado= validado, is_staff=False, is_superuser=False)
             obj.set_password(contraseña)
             obj.save()
             return redirect(reverse('login_')+'?registrado')

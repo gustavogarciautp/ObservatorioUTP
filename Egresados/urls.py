@@ -25,6 +25,14 @@ from perfiles.urls import profiles_patterns
 from messenger.urls import messenger_patterns
 from contenido.urls import contenido_patterns
 
+class EgresadoRequiredMixin(object):
+
+    def dispatch(self, request, *args, **kwargs):
+        if request.user.is_authenticated and request.user.is_egresado:
+            return super(EgresadoRequiredMixin, self).dispatch(request, *args, *kwargs)
+        else:
+            return redirect(reverse_lazy('login_'))
+
 urlpatterns = [
     path('registrarse/', app_registrarse_views.registrarse, name='registrarse'),
     path('', app_core_views.home, name="home_page"),
@@ -32,15 +40,18 @@ urlpatterns = [
 	path('login/', app_core_views.login,name='login_'),
     
     path('ad-min/', app_core_views.login, name='admin_'),
+    path('admin_admin/login/', app_core_views.login),
     path('admin_admin/', admin_site.urls, name='admin2'),
-	path('accounts/', include('django.contrib.auth.urls')),    
+
+    path('super-user/', app_core_views.login, name='super'),
+    path('admin_super_user/login', app_core_views.login),
+    path('admin_super_user/', admin.site.urls, name='super2'),
+	
+    path('accounts/', include('django.contrib.auth.urls')),    
     path('recuperar_1/', app_core_views.recuperar_1, name='recuperar_1'),
     path('recuperar_2/', include('app_core.urls')),
     
     path('principal/', app_core_views.principal, name='principal'),
-    
-    path('admin_super_user/', admin.site.urls, name='super2'),
-    path('super-user/', app_core_views.login, name='super'),
     
     path('404/', app_core_views.page404, name='404'),
     path('perfil/', ProfileUpdate.as_view(), name='perfil'),

@@ -8,10 +8,10 @@ class NoticiaAdmin(admin.ModelAdmin):
 	list_filter = ['created','updated','categorias']
 	list_display=('titulo','created','updated')
 
-	#class  Media :
-	#	css = {
-	#	' all ' : ('contenido/css/custom_ckeditor.css',)
-	#}
+	class  Media :
+		css = {
+		' all ' : ('contenido/css/custom_ckeditor.css',)
+	}
 # Register your models here.
 admin_site.register(Noticia, NoticiaAdmin)
 #admin_site.register(Noticia)

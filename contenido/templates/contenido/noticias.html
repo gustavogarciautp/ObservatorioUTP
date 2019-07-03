@@ -1,8 +1,8 @@
-{% extends "app_core/principal.html" %}
+{% extends template_base %}
 
 {% load static %}
 
-{% block title %}Publicaciones{% endblock  %}
+{% block title %}Publicaciones{% endblock %}
 
 {% block content %}
 
@@ -21,8 +21,10 @@
               <img class="mx-auto d-flex rounded img-fluid mb-3 mb-lg-0" src={{publicacion.Image.url}} alt="">
             </p>
             <p class="mb-0 mbt">
-              {{publicacion.descripcion|safe|slice:'0:11'}}  <!--Por defecto django ignora los saltos de linea, para que los tenga en cuenta se utilizar el tag linebreaks-->
+              {{publicacion.descripcion|striptags|safe|linebreaks|truncatechars:'500'}}  <!--Por defecto django ignora los saltos de linea, para que los tenga en cuenta se utilizar el tag linebreaks-->
             </p>
+            <p><a href="{% url 'noticefull' publicacion.id publicacion.titulo|slugify %}">Leer más</a>
+          </p>
             <p class="mb-0 mbt">
               <!--<span class="section-heading-under">Publicado por <em><b>{{post.author}}</b></em> en -->
               <!--<a href="#" class="link">General</a>, <a href="#" class="link">Ofertas</a></em>-->
@@ -33,13 +35,48 @@
                 </em>
             </span>
             </p>
+            <p>
+            {% if request.user.is_administrador %}
+            <a href="{% url 'update' publicacion.id %}">Editar</a>
+            |<a href="{% url 'delete' publicacion.id %}">Borrar</a>
+          {% endif %}
+            </p>
           </div>
 
         </div>
       </div>
     </div>
   </section>
-
 {% endfor %}
+</br>
+<nav aria-label="Page navigation">
+  <ul class="pagination justify-content-center">
+    {% if publicaciones.has_previous %}
+      <li class="page-item ">
+        <a class="page-link" href="?page={{ publicaciones.previous_page_number }}">&laquo;</a>
+      </li>
+    {% else %}
+      <li class="page-item disabled">
+        <a class="page-link" href="#" tabindex="-1">&laquo;</a>
+      </li>
+    {% endif %}
+    {% for i in paginator.page_range %}
+      <li class="page-item {% if publicaciones.number == i %}active{% endif %}">
+        <a class="page-link" href="?page={{ i }}">{{ i }}</a>
+      </li>
+    {% endfor %}
+    {% if publicaciones.has_next %}
+      <li class="page-item ">
+        <a class="page-link" href="?page={{ publicaciones.next_page_number }}">&raquo;</a>
+      </li>
+    {% else %}
+      <li class="page-item disabled">
+        <a class="page-link" href="#" tabindex="-1">&raquo;</a>
+      </li>
+    {% endif %}
+  </ul>
+</nav>
 
 {% endblock content %}
+
+

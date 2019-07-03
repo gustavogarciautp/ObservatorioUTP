@@ -66,7 +66,6 @@ def login(request):
 def page404(request, exception=''):
     return render(request, "app_core/404.html")
 
-
 def recuperar_1(request):
     recuperar1_form = Recuperar1Form() #Hacemos la instancia del formulario
     if request.method == 'POST': #verificamos se el formulario se ha enviado por POST
