@@ -79,7 +79,7 @@ def recuperar_1(request):
                 clave=get_random_string(length=50)
                 #link='http://127.0.0.1:8000/recuperar_2/'+str(clave_cifrada)
 
-                html_content='<p>Ha recibido este correo electrónico porque ha solicitado restablecer la contraseña para su cuenta en <a href="http://127.0.0.1:8000">http://127.0.0.1:8000</a></p></br><p>Por favor vaya a la siguiente página y escoja una nueva contraseña.</p></br><a href="http://127.0.0.1:8000/recuperar_2/'+clave+'">Recuperar contraseña</a></br></br><p>¡Gracias por usar nuestro sitio!</p></br>El equipo de <a href=" http://127.0.0.1:8000">Observatorio Egresados</a>'
+                html_content='<p>Ha recibido este correo electrónico porque ha solicitado restablecer la contraseña para su cuenta en <a href="http://observatorioutp.pythonanywhere.com">http://observatorioutp.pythonanywhere.com</a></p></br><p>Por favor vaya a la siguiente página y escoja una nueva contraseña.</p></br><a href="http://observatorioutp.pythonanywhere.com/recuperar_2/'+clave+'">Recuperar contraseña</a></br></br><p>¡Gracias por usar nuestro sitio!</p></br>El equipo de <a href="http://observatorioutp.pythonanywhere.com">Observatorio Egresados</a>'
                 msg = EmailMultiAlternatives(asunto, '', to=[email])
                 msg.attach_alternative(html_content, "text/html")
 

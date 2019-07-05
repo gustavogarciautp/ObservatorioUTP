@@ -28,7 +28,7 @@ years=[i for i in range(1930,1999)]
 months= {
     1: ('Enero'), 2: ('Febrero'), 3: ('Marzo'), 4: ('Abril'), 5: ('Mayo'), 6: ('Junio'),
     7: ('Julio'), 8: ('Agosto'), 9: ('Septiembre'), 10: ('Octubre'), 11: ('Noviembre'),
-    12: ('Dieciembre')
+    12: ('Diciembre')
 }
 
 IDENTIFICACION= [["Cédula de ciudadania","Cédula de ciudadania"],[ "Pasaporte","Pasaporte"]]
