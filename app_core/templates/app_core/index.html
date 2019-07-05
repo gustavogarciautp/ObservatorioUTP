@@ -34,6 +34,8 @@
           <!--<li class="active"><a href="#intro">Recargar</a></li>-->
           {% if request.user.is_administrador %}
           <li><a href="{% url 'create' %}">Crear noticia</a></li>
+          {% endif %}
+          {% if request.user.is_administrador or request.user.is_superusuario %}
           <li><a href="{% url 'contenido' %}">Listar noticias</a></li>
           {% endif %}
           <li><a href="{% url 'registrarse' %}">Registrarse</a></li>

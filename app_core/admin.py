@@ -3,7 +3,7 @@ from django.contrib.admin import AdminSite
 # Register your models here.
 from .models import Egresado, Administrador, Intereses, Interes, User, EgresadosUTP, City, Country
 from django.contrib.auth.models import Group
-from .forms import AdminForm
+from .forms import AdminForm, InteresForm
 #from app_registrarse.models import Perfil
 
 class AdminSuperuser(admin.ModelAdmin):
@@ -46,6 +46,13 @@ class InteresEgresado(admin.ModelAdmin):
 	search_fields = ('nombre',)
 	list_filter = ['created','updated']
 	list_display = ('nombre','created','updated')
+
+	def get_form(self, request, obj=None, **kwargs):
+		return InteresForm
+
+class InteresesEgresado(admin.ModelAdmin):
+	readonly_fields = ['interes','egresado']
+	
 
 admin_site.register(Interes, InteresEgresado)
 admin_site.register(Intereses)

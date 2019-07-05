@@ -11,12 +11,15 @@
 </head>
 
 {% load static %}
+<style>.errorlist{color:white;} input#id_confirmacion{min-width: 30px;}</style>
+
 <body>
   <div class="contain">
     <div class="wrapper"></div>
       <div class="contacts" align="center">
         <h2>FORMULARIO DE REGISTRO</h2>
       </div>
+      <br>
       <br>
       <div class="form">
         <form action="" method="POST">
@@ -25,20 +28,21 @@
             <label for="Tipo_de_identificacion">Tipo de identificación:</label>
             {{form.Tipo_de_identificacion}}
           </p>
-          <p>
+          <div>
              <label for="DNI">DNI:</label>
              {{form.DNI}}
-          </p>
-          <p>
+             {{form.DNI.errors}}
+          </div>
+          <div>
             <label for="username">Nombre:</label>
             {{form.nombres}}
             {{form.nombres.errors}}
-          </p>                  
-          <p>
+          </div>                  
+          <div>
             <label for="apellidos">Apellidos:</label>
             {{form.apellidos}}
             {{form.apellidos.errors}}
-          </p>
+          </div>
           <p>
             <label for="country">Pais:</label>
              {{form.pais}}
@@ -47,28 +51,29 @@
             <label>Ciudad:</label>
             {{form.ciudad}}
           </p>
-          <p>
+          <div>
             <label for="email">Email:</label>
             {{form.email}}
             {{form.email.errors}}
-          </p>
+          </div>
           
-          <p>
-            <label for="fecha_nacimiento">Fecha de nacimiento:</label>
+            <div class="grid-container" style="display:inline-grid; grid-template-columns: auto auto;">
+            <label for="fecha_nacimiento" style="grid-column: 1 / 4";>Fecha de nacimiento:</label>
             {{form.fecha_nacimiento}}
             {{form.fecha_nacimiento.errors}}
-          </p>
-
-          <p>
-            <label for="genero">Genero:</label>
-            {{form.genero}}
-          </p>                 
+            </div>
               
-          <p>
+          <div>
             <label for="contraseña">Contraseña:</label>
             {{form.contraseña}}
             {{form.contraseña.errors}}
-          </p>
+          </div>
+
+          <div style="grid-column: 1/3;display:inline-grid; grid-template-columns: auto auto;">          
+            {{form.confirmacion}}                  
+            {{form.confirmacion.errors}}
+            <div><h5>Confirma que confía en el Sistema de Egresados para el manejo de datos sensibles</h5></div>                        
+          </div>
         
           <p>
             <div class="full-width" align="center">
@@ -76,15 +81,6 @@
             </div>                 
           </p>
 
-          <div class="full-width2">
-          <p>             
-            <h6>Confirma que confía en el Sistema de Egresados para el manejo de datos sensibles</h6>                         
-          </p>
-          </div>
-          <p>
-            {{form.confirmacion}}                  
-            {{form.confirmacion.errors}}
-          </p>
 
           <p class="full-width">
             <input type="submit" value="ENVIAR INFORMACIÓN">

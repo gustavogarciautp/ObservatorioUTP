@@ -1,5 +1,5 @@
 from django import forms
-from .models import Administrador, Country, City, Egresado
+from .models import Administrador, Country, City, Egresado, Interes
 from django.contrib.auth.forms import UserChangeForm
 
 countries=Country.objects.all()
@@ -43,6 +43,21 @@ class FirstLoginAdmin(forms.Form):
 		return contraseña	
 
 
+class InteresForm(forms.ModelForm):
+	class Meta:
+		model = Interes
+		fields = ('nombre',)
+
+	def clean_nombre(self):
+		nombre= self.cleaned_data['nombre']
+		if len(nombre)>=31:
+			raise forms.ValidationError('Tamaño máximo: 30 caracteres')
+		words=nombre.split()
+		for word in words:
+			if not word.isalpha():
+				raise forms.ValidationError('Introduce un interes valido (solo letras)')
+		return nombre
+
 class AdminForm(forms.ModelForm):
 	def __init__(self, *args, **kwargs):
 		super(AdminForm, self).__init__(*args, **kwargs)
@@ -67,7 +82,7 @@ class AdminForm(forms.ModelForm):
 		nombres = self.cleaned_data['nombres']
 		if not nombres.isalpha():
 			raise forms.ValidationError('Introduce un nombre valido')            
-		return nombres;    
+		return nombres  
 
 	def clean_apellidos(self):
 		apellidos = self.cleaned_data['apellidos']
@@ -99,7 +114,7 @@ class AdminForm(forms.ModelForm):
 		dni= self.cleaned_data['DNI']
 		Tipo_de_identificacion = self.cleaned_data['Tipo_de_identificacion']
 		if  Tipo_de_identificacion==IDENTIFICACION[1]:
-			if not dni[0:3].isalpha() and not dni[3:6].isdigit:
+			if not dni[0:3].isalpha() or not dni[3:6].isdigit():
 				raise  forms.ValidationError("DNI invalido")
 		elif Tipo_de_identificacion==IDENTIFICACION[0]:
 			if len(dni) <8 or len(dni)>10:
@@ -156,7 +171,7 @@ class EditProfileForm(UserChangeForm):
 		dni= self.cleaned_data['DNI']
 		Tipo_de_identificacion = self.cleaned_data['Tipo_de_identificacion']
 		if  Tipo_de_identificacion==IDENTIFICACION[1]:
-			if not dni[0:3].isalpha() and not dni[3:6].isdigit:
+			if not dni[0:3].isalpha() or not dni[3:6].isdigit():
 				raise  forms.ValidationError("DNI invalido")
 		elif Tipo_de_identificacion==IDENTIFICACION[0]:
 			if len(dni) <8 or len(dni)>10:

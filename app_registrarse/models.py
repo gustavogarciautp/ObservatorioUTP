@@ -23,7 +23,7 @@ class Perfil(models.Model):
     def __str__(self):
         return self.user.nombres
 
-"""
+
 #Confirma que el perfil siempre existe
 
 @receiver(post_save, sender= Egresado)
@@ -32,3 +32,4 @@ def ensure_profile_exists(sender, instance, **kwargs):
         Perfil.objects.get_or_create(user=instance)
         print("Se ha acabado de crear un usuario y su perfil enlazado")
 
+"""

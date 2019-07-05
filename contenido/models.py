@@ -10,7 +10,7 @@ from django.core.mail import EmailMultiAlternatives
 # Create your models here.
 class Noticia(models.Model):
 	titulo = models.CharField(max_length=200, verbose_name='Titulo')
-	descripcion = RichTextField(verbose_name='Descripcion')
+	descripcion = RichTextField(verbose_name='Descripción')
 	Image= models.ImageField(verbose_name='Imagen', upload_to='contenidos')
 	created = models.DateTimeField(auto_now_add= True, verbose_name="Fecha de creación")
 	updated = models.DateTimeField(auto_now=True, verbose_name="Fecha de edición")

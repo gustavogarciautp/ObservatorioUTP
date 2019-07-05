@@ -50,7 +50,7 @@ class InteresesForm(forms.Form):
 
 class RegistroForm(forms.Form):
 
-    Tipo_de_identificacion = forms.CharField(label= "ID", required=True, widget= forms.Select(choices= IDENTIFICACION))
+    Tipo_de_identificacion = forms.CharField(label= "ID", required=True, widget= forms.Select(attrs={'class':'form-control'},choices= IDENTIFICACION))
     DNI  = forms.CharField(label= "DNI", required=True, max_length=10, widget=forms.TextInput(attrs= {'class':'form-control', 'placeholder':'Escribe tu DNI'}))
 
     nombres = forms.CharField(label="Nombres", required=True, widget= forms.TextInput(
@@ -61,18 +61,18 @@ class RegistroForm(forms.Form):
         attrs= {'class':'form-control', 'placeholder':'Escribe tus apellidos', 'id':'app'}
     ), max_length=100)
 
-    pais = forms.CharField(label="Pais", required=True, widget= forms.Select(choices=PAISES, attrs={'id':'idpais', 'onchange':'changecountry()'})) 
-    ciudad = forms.CharField(label="ciudad", required=True, widget= forms.Select(choices=[["init","init"]], attrs={'id':'ciudades'})) 
+    pais = forms.CharField(label="Pais", required=True, widget= forms.Select(choices=PAISES, attrs={'class':'form-control grid-item','id':'idpais', 'onchange':'changecountry()'})) 
+    ciudad = forms.CharField(label="ciudad", required=True, widget= forms.Select(choices=[["init","init"]], attrs={'class':'form-control','id':'ciudades'})) 
 
-    fecha_nacimiento = forms.DateField(label="Fecha de nacimiento",required =False, widget=forms.SelectDateWidget(months=months, years=years, empty_label=("Año", "Mes", "Día"),)) #campo opcional 
+    fecha_nacimiento = forms.DateField(label="Fecha de nacimiento",required =False, widget=forms.SelectDateWidget(attrs={'class':'form-control'},months=months, years=years, empty_label=("Año", "Mes", "Día"),)) #campo opcional 
     email = forms.EmailField(label="Email",required=True, widget=forms.EmailInput(
         attrs= {'class':'form-control', 'placeholder':'Escribe tu email'}), max_length=100, min_length=3) #campo opcional
     
-    genero= forms.CharField(label="Generos", required=False, widget= forms.Select(choices=GENEROS)) 
+    genero= forms.CharField(label="Generos", required=False, widget= forms.Select(attrs={'class':'form-control'},choices=GENEROS)) 
 
     contraseña = forms.CharField(label="Contraseña", required=True, widget= forms.PasswordInput(attrs= {'class':'form-control', 'placeholder':'Escribe tu contraseña'})) 
 
-    confirmacion = forms.BooleanField()
+    confirmacion = forms.BooleanField(widget=forms.CheckboxInput())
 
     captcha = ReCaptchaField(public_key = '6LdaUqcUAAAAAOK3xzjo-oknTM33fbXExlcwFG0z',private_key = '6LdaUqcUAAAAANtBkskWrDSPz2SezQT_i3jsSRon', widget= ReCaptchaV2Checkbox())
 
@@ -100,6 +100,7 @@ class RegistroForm(forms.Form):
 
     def clean_contraseña(self):
         contraseña= self.cleaned_data['contraseña']
+        print(contraseña.isdigit())
         if contraseña.isdigit():
             raise forms.ValidationError('Su contraseña no puede ser completamente numérica')
         elif len(contraseña)<8:
@@ -112,7 +113,7 @@ class RegistroForm(forms.Form):
         dni= self.cleaned_data['DNI']
         Tipo_de_identificacion = self.cleaned_data['Tipo_de_identificacion']
         if  Tipo_de_identificacion==IDENTIFICACION[1]:
-            if not dni[0:3].isalpha() and not dni[3:6].isdigit:
+            if not dni[0:3].isalpha() or not dni[3:6].isdigit():
                 raise  forms.ValidationError("DNI invalido")
         elif Tipo_de_identificacion==IDENTIFICACION[0]:
             if len(dni) <8 or len(dni)>10:

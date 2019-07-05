@@ -13,6 +13,9 @@
       <div class="row">
         <div class="col-xl-9 mx-auto">
           <div class="cta-innerv text-center rounded">
+            {% if request.user.is_administrador or request.user.is_superusuario %}
+            <br><br><br><br>
+            {% endif %}
             <h2 class="section-heading mb-5">
               <!--<span class="section-heading-upper">{{post.published|date:"SHORT_DATE_FORMAT"}}</span>  Aqui con date:"SHORT_DATE_FORMAT lo que hacemos es formatear la fecha"-->
               <span class="section-heading-lower">{{noticia.titulo}}</span>
@@ -21,9 +24,13 @@
             <p class="mb-0">
               <img class="mx-auto d-flex rounded img-fluid mb-3 mb-lg-0" src={{noticia.Image.url}} alt="">
             </p>
+            <br>
+            <br>
+            <div class="text-justify">
             <p class="mb-0 mbt">
               {{noticia.descripcion|striptags|safe|linebreaks|truncatechars:'500'}}  <!--Por defecto django ignora los saltos de linea, para que los tenga en cuenta se utilizar el tag linebreaks-->
             </p>
+            </div>
               <p><a href="{% url 'noticefull' noticia.id noticia.titulo|slugify %}" >Leer más</a>
             <p class="mb-0 mbt">
               <!--<a href="#" class="link">General</a>, <a href="#" class="link">Ofertas</a></em>-->

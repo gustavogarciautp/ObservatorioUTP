@@ -147,7 +147,8 @@ class Administrador (User):
     is_superusuario = models.BooleanField(default=False)
 
     def has_perm(self, perm, obj=None):
-        patron=re.compile(r'administrador|city|country|region')
+        print(perm)
+        patron=re.compile(r'administrador|city|country|region|add_egresado|delete_egresado')
         m= patron.search(perm)
         if m:
             return False

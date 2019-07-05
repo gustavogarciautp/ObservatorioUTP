@@ -71,13 +71,13 @@ class NoticiaFull(ContenidoRequiredMixin, DetailView):
     model = Noticia
 
 
-class ContenidoCreate(CreateView):
+class ContenidoCreate(ContenidoRequiredMixin,CreateView):
 	model = Noticia
 	form_class = NoticiaForm
 	success_url= reverse_lazy('contenido')
 
 
-class ContenidoUpdate(UpdateView):
+class ContenidoUpdate(ContenidoRequiredMixin,UpdateView):
 	model = Noticia
 	form_class = NoticiaForm
 	template_name_suffix= '_update_form'
@@ -86,6 +86,6 @@ class ContenidoUpdate(UpdateView):
 		return reverse_lazy('update', args=[self.object.id]) + '?ok'
 
 
-class ContenidoDelete(DeleteView):
+class ContenidoDelete(ContenidoRequiredMixin, DeleteView):
 	model = Noticia
 	success_url = reverse_lazy('contenido')

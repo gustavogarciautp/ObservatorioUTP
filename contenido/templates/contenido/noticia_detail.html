@@ -11,6 +11,7 @@
     <div class="row">
       <div class="col-xl-9 mx-auto">
         <div class="cta-innerv text-center rounded">
+          <br><br><br><br>
           <h2 class="section-heading mb-5">
             <!--<span class="section-heading-upper">{{post.published|date:"SHORT_DATE_FORMAT"}}</span>  -Aqui con date:"SHORT_DATE_FORMAT lo que hacemos es formatear la fecha"-->
             <span class="section-heading-lower">{{noticia.titulo}}</span>
@@ -18,10 +19,13 @@
           <p class="mb-0">
             <img class="mx-auto d-flex rounded img-fluid mb-3 mb-lg-0" src={{noticia.Image.url}} alt="">
           </p>
+          </br>
+          <div class="text-justify">
           <p class="mb-0 mbt">
             {{noticia.descripcion|striptags|safe|linebreaks}}  <!--Por defecto django ignora los saltos de linea, para que los tenga en cuenta se utilizar el tag linebreaks-->
           </p>
-          <p class="mb-0 mbt">
+          </div>
+          <p class="mb-0 mbt ">
               <em>
                   {% for category in noticia.categorias.all %}
                     <a href="{% url 'categoria' category.id %}" class="link">{{category.nombre}}</a>{% if not forloop.last %},{% endif %}

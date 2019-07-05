@@ -7,22 +7,33 @@
 {% block content %}
 
 {% for publicacion in publicaciones %}
-
+<!DOCTYPE html>
+<html>
+  <head>
+    <!-- <link rel="stylesheet" type="text/css" href="../../static/contenido/css/noticias.css"> -->
+  </head>
+<body>
   <section class="page-section cta">
     <div class="container">
       <div class="row">
         <div class="col-xl-9 mx-auto">
           <div class="cta-innerv text-center rounded">
+          {% if request.user.is_administrador or request.user.is_superusuario %}
+          <br><br><br><br>
+          {% endif %}
             <h2 class="section-heading mb-5">
-              <!--<span class="section-heading-upper">{{post.published|date:"SHORT_DATE_FORMAT"}}</span>  -Aqui con date:"SHORT_DATE_FORMAT lo que hacemos es formatear la fecha"-->
               <span class="section-heading-lower">{{publicacion.titulo}}</span>
             </h2>
             <p class="mb-0">
               <img class="mx-auto d-flex rounded img-fluid mb-3 mb-lg-0" src={{publicacion.Image.url}} alt="">
             </p>
+            <br>
+            <br>
+            <div class="text-justify">
             <p class="mb-0 mbt">
               {{publicacion.descripcion|striptags|safe|linebreaks|truncatechars:'500'}}  <!--Por defecto django ignora los saltos de linea, para que los tenga en cuenta se utilizar el tag linebreaks-->
             </p>
+            </div>
             <p><a href="{% url 'noticefull' publicacion.id publicacion.titulo|slugify %}">Leer más</a>
           </p>
             <p class="mb-0 mbt">
@@ -47,6 +58,8 @@
       </div>
     </div>
   </section>
+</body>
+</html>
 {% endfor %}
 </br>
 <nav aria-label="Page navigation">
