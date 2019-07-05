@@ -21,7 +21,7 @@ from django.contrib.auth.decorators import login_required
 from django.utils.decorators import method_decorator
 from django.http import Http404, JsonResponse
 
-from .models import Perfil
+#from .models import Perfil
 
 years=[i for i in range(1930,1998)]
 
@@ -53,11 +53,6 @@ def intereses (request):
                 obj_int= Interes.objects.get(nombre=interes_)
                 obj_= Intereses.objects.create(interes=obj_int, egresado=obj)
     return render(request, "app_registrarse/intereses.html", {'form':InteresesForm})
-
-
-
-
-
 
 def registrarse(request):
     registro_form = RegistroForm() #Hacemos la instancia del formulario
@@ -111,12 +106,13 @@ class ProfileUpdate(EgresadoRequiredMixin, UpdateView):
     form_class = EgresadoForm
     success_url = reverse_lazy('perfil')
     template_name= 'app_registrarse/perfil_form.html'
+
     def get_object(self):
         return self.request.user
+
     def get_form(self,form_class=None):
         form = super(ProfileUpdate, self).get_form()
-       
-        form.fields['fecha_nacimiento'].widget=forms.SelectDateWidget(months=months, years=years, empty_label=("Año", "Mes", "Día"),)
+        form.fields['fecha_nacimiento'].widget=forms.SelectDateWidget(attrs= {'class':'form-control col-md-4'},months=months, years=years, empty_label=("Año", "Mes", "Día"),)
 
         return form
 

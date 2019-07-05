@@ -55,6 +55,7 @@ INSTALLED_APPS = [
     'messenger',
     'cities_light',
     'contenido.apps.ContenidoConfig',
+    'ckeditor_uploader',
 ]
 
 MIDDLEWARE = [
@@ -170,10 +171,12 @@ CKEDITOR_CONFIGS = {
             ['Bold', 'Italic', 'Underline'],
             ['NumberedList', 'BulletedList', '-', 'Outdent', 'Indent', '-', 'JustifyLeft', 'JustifyCenter', 'JustifyRight', 'JustifyBlock'],
             ['Link', 'Unlink'],
-        ]
+        ],
+        'height': 300,
+        'width': 'auto',
     }
 }
-"""
+
 
 CKEDITOR_CONFIGS = {
     'default': {
@@ -182,3 +185,25 @@ CKEDITOR_CONFIGS = {
         'width': 'auto',
     },
 }
+"""
+
+CKEDITOR_CONFIGS = {
+   'default': {
+       'toolbar_Full': [
+            ['Styles', 'Format', 'Bold', 'Italic', 'Underline', 'Strike', 'SpellChecker', 'Undo', 'Redo'],
+            ['Link', 'Unlink', 'Anchor'],
+            ['Table', 'HorizontalRule'],
+            ['TextColor', 'BGColor'],
+            ['Smiley', 'SpecialChar'], ['Source'],
+            ['JustifyLeft','JustifyCenter','JustifyRight','JustifyBlock'],
+            ['NumberedList','BulletedList'],
+            ['Indent','Outdent'],
+            ['Maximize'],
+        ],
+        'extraPlugins': 'justify,liststyle,indent',
+        'height': 300,
+        'width': 'auto',
+   },
+}
+
+CKEDITOR_UPLOAD_PATH = '/uploads/'

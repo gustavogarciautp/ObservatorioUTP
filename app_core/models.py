@@ -202,6 +202,7 @@ class Egresado (User):
     fecha_p = models. BooleanField(null = False, blank = False, default = True)
     email_p = models. BooleanField(null = False, blank = False, default = True)
     pais_p = models. BooleanField(null = False, blank = False, default = True)
+    ciudad_p = models. BooleanField(null = False, blank = False, default = True)
     bio= models.TextField(null=True, blank=True)
     
     class Meta:

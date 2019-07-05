@@ -9,18 +9,18 @@
       <div class="col-md-9 mx-auto mb-5">
         <h2>Perfiles</h2>
         <div class="row">
-          {% for perfil in perfil_list %}
+          {% for egresado in egresado_list %}
             <div class="col-md-4 mt-2 mb-3 ">
               <div class="row p-1">
                 <div class="col-md-12">
-                  {% if perfil.avatar %}
-                    <img src="{{perfil.avatar.url}}" class="img-fluid profile-avatar">
+                  {% if egresado.avatar %}
+                    <img src="{{egresado.avatar.url}}" class="img-fluid profile-avatar">
                   {% else %}
                     <img src="{% static 'app_registrarse/img/no-avatar.jpg' %}" class="img-fluid profile-avatar">
                   {% endif %}
                   <p class="profile-data">
-                    <b>{{perfil.user|truncatechars:"16"}}</b><br>
-                    <a href="{% url 'profiles:detail' perfil.user.email %}">Ver perfil</a>
+                    <b>{{egresado|truncatechars:"16"}}</b><br>
+                    <a href="{% url 'profiles:detail' egresado.email %}">Ver perfil</a>
                   </p>
                 </div>
               </div>

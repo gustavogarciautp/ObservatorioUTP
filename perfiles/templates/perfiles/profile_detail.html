@@ -1,6 +1,6 @@
 {% extends 'app_core/principal.html' %}
 {% load static %}
-{% block title %}{{perfil.user}}{% endblock %}
+{% block title %}{{egresado}}{% endblock %}
 {% block content %}
 <main role="main">
   <div class="container">
@@ -10,21 +10,25 @@
           <div class="row">
             <!-- Avatar -->
             <div class="col-md-2">
-              {% if perfil.avatar %}
-                <img src="{{perfil.avatar.url}}" class="img-fluid">
-              {% else %}
-                <img src="{% static 'app_registrarse/img/no-avatar.jpg' %}" class="img-fluid">
-              {% endif %}
-              {% if request.user != perfil.user %}
-                <a href="{% url 'messenger:start' perfil.user.email %}" class="btn btn-primary btn-sm btn-block mt-3">
+                {% if not egresado.avatar %}
+                  <img src="{% static 'app_registrarse/img/no-avatar.jpg' %}" class="img-fluid">
+                {% else %}
+                  <img src="{{egresado.avatar.url}}" class="img-fluid">
+                {% endif %}
+              {% if request.user != egresado %}
+                <a href="{% url 'messenger:start' egresado.email %}" class="btn btn-primary btn-sm btn-block mt-3">
                   Enviar mensaje
                 </a>
               {% endif %}
             </div>
             <!-- Campos -->
             <div class="col-md-10">
-              <h3>{{perfil.user}}</h3>
-              {% if perfil.bio %}<p>{{perfil.bio}}</p>{% endif %}
+              <h3>{{egresado}}</h3>
+              </br>
+              {% if egresado.bio_p and egresado.bio %}<p><b>Biografía:</b></br>{{egresado.bio}}</p>{% endif %}
+              {% if egresado.pais_p %}<p><b>País: </b>{{egresado.pais}}</p>{% endif %}
+              {% if egresado.ciudad_p %}<p><b>Ciudad: </b>{{egresado.ciudad}}</p>{% endif %}
+              {% if egresado.fecha_p %}<p><b>Fecha de nacimiento: </b>{{egresado.fecha_nacimiento}}</p>{% endif %}
             </div>
           </div>
         </form>

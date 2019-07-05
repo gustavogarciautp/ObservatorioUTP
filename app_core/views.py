@@ -171,7 +171,6 @@ def ChangeEgresadoPassword(request):
         formulario = ChangeEgresadoPasswordForm()
         if request.method == 'POST':
             formulario = ChangeEgresadoPasswordForm(data=request.POST)
-            print(request.POST)
             if formulario.is_valid():
                 password=request.POST.get('contraseña')
                 contraseñanueva = request.POST.get('contraseñanueva')

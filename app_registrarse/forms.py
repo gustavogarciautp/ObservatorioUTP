@@ -4,7 +4,7 @@ from captcha.widgets import ReCaptchaV2Checkbox
 from app_core.models import Interes, EgresadosUTP, Egresado
 from django.forms.widgets import CheckboxSelectMultiple
 from django.views.generic.base import TemplateView
-from .models import Perfil
+#from .models import Perfil
 
 from app_core.models import Egresado, City, Country
 
@@ -74,7 +74,7 @@ class RegistroForm(forms.Form):
 
     confirmacion = forms.BooleanField()
 
-    #captcha = ReCaptchaField(public_key = '6LdaUqcUAAAAAOK3xzjo-oknTM33fbXExlcwFG0z',private_key = '6LdaUqcUAAAAANtBkskWrDSPz2SezQT_i3jsSRon', widget= ReCaptchaV2Checkbox())
+    captcha = ReCaptchaField(public_key = '6LdaUqcUAAAAAOK3xzjo-oknTM33fbXExlcwFG0z',private_key = '6LdaUqcUAAAAANtBkskWrDSPz2SezQT_i3jsSRon', widget= ReCaptchaV2Checkbox())
 
     def clean_nombres(self):
         nombres = self.cleaned_data['nombres']
@@ -139,14 +139,46 @@ class RegistroForm(forms.Form):
 class EgresadoForm(forms.ModelForm):
     class Meta:
         model = Egresado
-        fields = ['pais', 'fecha_nacimiento', 'bio', 'avatar', 'nombres', 'apellidos', 'avatar_p', 'pais_p','bio_p', 'nombres_p', 'fecha_p', 'email_p']
+        fields = ['pais', 'ciudad','fecha_nacimiento', 'bio', 'avatar', 'nombres', 'apellidos', 'avatar_p', 'pais_p','bio_p', 'nombres_p', 'fecha_p', 'email_p','ciudad_p']
 
         widgets = {
             'avatar': forms.ClearableFileInput(attrs={'class': 'form-control-file mt-3'}),
             'bio': forms.Textarea(attrs={'class':'form-control mt-3', 'rows':3, 'placeholder': 'Biografia'}),
-            'avatar_p': forms.CheckboxInput()
-
+            'avatar_p': forms.CheckboxInput(),
+            'pais': forms.Select(choices=PAISES, attrs={'class':'form-control','onchange':'changecountry()'}),
+            'apellidos': forms.TextInput(attrs= {'class':'form-control', 'placeholder':'Escribe tus nombres'}),
+            'nombres': forms.TextInput(attrs= {'class':'form-control', 'placeholder':'Escribe tus apellidos'}),
         }
+
+    def __init__(self, *args, **kwargs):
+        super(EgresadoForm, self).__init__(*args, **kwargs)
+        egresado_instance = self.instance
+        if egresado_instance.email:
+            id_pais= Country.objects.get(name= egresado_instance.pais).id
+            self.CIUDADES = [[x.name, x.name] for x in City.objects.filter(country_id=id_pais)]
+        else:
+            #self.CIUDADES=[[x.name, x.name] for x in City.objects.filter(country_id=countries[0].id)]
+            self.CIUDADES=[["init","init"]]
+        self.fields['ciudad']= forms.CharField(label="Ciudad", widget= forms.Select(choices=self.CIUDADES, attrs={'class':'form-control'}))
+
+    def clean_nombres(self):
+        nombres = self.cleaned_data['nombres']
+        if not nombres.isalpha():
+            raise forms.ValidationError('Introduce un nombre valido')            
+        return nombres;    
+
+    def clean_apellidos(self):
+        apellidos = self.cleaned_data['apellidos']
+        if not apellidos.isalpha():
+            raise forms.ValidationError('Introduce un apellido valido')            
+        return apellidos
+
+    def clean_fecha_nacimiento(self):
+        date_born= self.cleaned_data['fecha_nacimiento']
+        if not date_born:
+            raise forms.ValidationError("Ingrese una fecha válida")
+        return date_born
+
 
 class EmailForm(forms.ModelForm):
     email = forms.EmailField(required=True, help_text="Requerido. 254 carácteres como máximo y debe ser válido")
