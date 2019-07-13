@@ -6,12 +6,34 @@
 
 {% block content %}
 
-{% for publicacion in publicaciones %}
+<script>
+
+window.onload=listcategory;
+function listcategory() {
+  var select_category= document.getElementById("category");
+  var select_tipo = document.getElementById("tipo");
+  /*while (select_ciudad.firstChild) {
+      select_ciudad.removeChild(select_ciudad.firstChild);
+  }*/
+  var email = document.getElementById("email");
+   email= country = encodeURIComponent(email.value);
+    const url = "{% url 'categories' %}" + "?email="+email + "&type="+ encodeURIComponent(select_tipo.value);
+    fetch(url, {'credentials':'include'}).then(response => response.json()).then(function(data){
+        var i=0;
+        var categoria='';
+        for (i=0; i< data['categorias'].length; i++){
+          categoria= data['categorias'][i];
+          categoria_option = document.createElement('OPTION');
+          categoria_option.value=categoria;
+          categoria_option.text= categoria;
+          select_category.appendChild(categoria_option);
+        }
+    })
+  }
+</script>
+
 <!DOCTYPE html>
-<html>
-  <head>
-    <!-- <link rel="stylesheet" type="text/css" href="../../static/contenido/css/noticias.css"> -->
-  </head>
+<html lang="es">
 <body>
   <section class="page-section cta">
     <div class="container">
@@ -21,6 +43,41 @@
           {% if request.user.is_administrador or request.user.is_superusuario %}
           <br><br><br><br>
           {% endif %}
+          <input type="hidden" id="email" value={{request.user.email}}>
+          <input type="hidden" id="tipo" value={{request.user.is_superuser}}>
+            <form method="GET" action="/publicaciones/">
+            <div class="grid-container" style="display:inline-grid; grid-template-columns: auto auto auto;">
+            <input type="text" name="title" style="grid-column: 1 / 4" placeholder="Buscar por titulo" class="form-control mt-1">
+            <input type="text" name="description" style="grid-column: 5 / 8" placeholder="Buscar por descripcion" class="form-control mt-1">
+            <select name="category" id="category" class="form-control mt-1">
+              <option value="">Buscar por Categoria</option>
+            </select>
+            <input type="submit" class="btn btn-primary btn-block mt-1" style="grid-column: 9 / 12" value="Buscar">
+
+            </div>
+            </form>
+          </div>
+
+        </div>
+      </div>
+    </div>
+  </section>
+</body>
+</html>
+
+{% for publicacion in publicaciones %}
+
+<!DOCTYPE html>
+<html lang="es">
+  <head>
+    <!-- <link rel="stylesheet" type="text/css" href="../../static/contenido/css/noticias.css"> -->
+  </head>
+<body>
+  <section class="page-section cta">
+    <div class="container">
+      <div class="row">
+        <div class="col-xl-9 mx-auto">
+          <div class="cta-innerv text-center rounded">
             <h2 class="section-heading mb-5">
               <span class="section-heading-lower">{{publicacion.titulo}}</span>
             </h2>

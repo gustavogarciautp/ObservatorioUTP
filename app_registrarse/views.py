@@ -40,19 +40,37 @@ def update():
     return INTERESES
 
 def intereses (request):
-    intereses= InteresesForm()
-    INTERESES=update()
-    intereses.fields['Interes'].choices=INTERESES
-    if request.method == 'POST': #verificamos se el formulario se ha enviado por POST
-        intereses = InteresesForm(data= request.POST) #request.POST contiene los campos que hemos rellenado en el formulario
-        if intereses.is_valid():
-            intereses_=(request.POST.getlist('Interes'))
-            obj=Egresado.objects.get(email=request.user.email)
+    if request.user.is_authenticated and request.user.is_egresado:
+        intereses= InteresesForm()
+        INTERESES=update()
+        intereses.fields['Interes'].choices= INTERESES
+        intereses_checked=Intereses.objects.filter(egresado=request.user).values_list('interes', flat=True)
+        pk_intereses=Interes.objects.filter(pk__in=intereses_checked)
+        intereses.fields['Interes'].initial= [x.nombre for x in pk_intereses]
+        
+        if request.method == 'POST': #verificamos se el formulario se ha enviado por POST
+            intereses = InteresesForm(data= request.POST) #request.POST contiene los campos que hemos rellenado en el formulario
+            if intereses.is_valid():
+                intereses_=(request.POST.getlist('Interes'))  #Intereses seleccionados
+                obj=Egresado.objects.get(email=request.user.email)
 
-            for interes_ in intereses_:
-                obj_int= Interes.objects.get(nombre=interes_)
-                obj_= Intereses.objects.create(interes=obj_int, egresado=obj)
-    return render(request, "app_registrarse/intereses.html", {'form':InteresesForm})
+                old=set(Intereses.objects.filter(egresado=obj).values_list('interes', flat=True)) #pk de los intereses
+                
+                new=set(Interes.objects.filter(nombre__in=intereses_).values_list(flat=True))
+                
+                delete= old - new
+                add= new-old
+
+
+                for pk in delete:
+                    Intereses.objects.filter(interes=  Interes.objects.get(pk=pk)).delete()
+
+                for pk in add:
+                    Intereses.objects.get_or_create(interes= Interes.objects.get(pk=pk), egresado=obj)
+
+        return render(request, "app_registrarse/intereses.html", {'form':intereses})
+    else:
+        return redirect(reverse('login_'))
 
 def registrarse(request):
     registro_form = RegistroForm() #Hacemos la instancia del formulario

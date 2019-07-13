@@ -38,14 +38,12 @@ def update():
     obj= Interes.objects.all()
     INTERESES=[]
     for interes in obj:
-        print(interes.nombre)
         INTERESES.append([interes.nombre,interes.nombre])
     return INTERESES
 
 class InteresesForm(forms.Form):
     INTERESES=update()
     Interes= forms.MultipleChoiceField(required=True,label='Interes',widget=CheckboxSelectMultiple(),choices=INTERESES)
-
 
 
 class RegistroForm(forms.Form):

@@ -55,4 +55,4 @@ class InteresesEgresado(admin.ModelAdmin):
 	
 
 admin_site.register(Interes, InteresEgresado)
-admin_site.register(Intereses)
+admin_site.register(Intereses, InteresesEgresado)

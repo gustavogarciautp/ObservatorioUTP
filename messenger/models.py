@@ -18,6 +18,7 @@ class ThreadManager(models.Manager):
             thread.users.add(user1, user2)
         return thread
 
+
 class Message(models.Model):
 	user = models.ForeignKey(Egresado, on_delete= models.CASCADE)
 	content = models.TextField()

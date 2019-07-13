@@ -21,6 +21,7 @@ from app_registrarse import views as app_registrarse_views
 from django.conf import settings
 from app_core.admin import admin_site
 from app_registrarse.views import ProfileUpdate, EmailUpdate, BuscarCiudades
+from contenido.views import BuscarCategorias 
 from perfiles.urls import profiles_patterns
 from messenger.urls import messenger_patterns
 from contenido.urls import contenido_patterns
@@ -71,6 +72,8 @@ urlpatterns = [
     path('change_egresado_password/', app_core_views.ChangeEgresadoPassword, name='change_egresado_password'),
 
     path('ckeditor/', include('ckeditor_uploader.urls')),
+
+    path('categories/', BuscarCategorias, name='categories'),
 
 ]
 

@@ -9,12 +9,16 @@ from django.shortcuts import render
 from app_registrarse.views import EgresadoRequiredMixin
 from django.views.generic.edit import CreateView, UpdateView, DeleteView
 from .forms import NoticiaForm
+from django.http import JsonResponse
 # Create your views here.
 
 def noticia(request):
 	if request.user.is_authenticated:
 		publicaciones_list=[]
 		template_base=''
+		title = request.GET.get("title")
+		description = request.GET.get("description")
+		category = request.GET.get("category")
 		if request.user.is_egresado:
 			categorias=[]
 			categorias_piv = Intereses.objects.filter(egresado__email=request.user.email)
@@ -29,6 +33,14 @@ def noticia(request):
 		else:
 			publicaciones_list = Noticia.objects.all()
 			template_base= "app_core/index.html"
+
+		if title:
+			publicaciones_list = publicaciones_list.filter(titulo__icontains = title)
+		if description:
+			publicaciones_list = publicaciones_list.filter(descripcion__icontains = description)
+		if category:
+			category=Interes.objects.get(nombre=category)
+			publicaciones_list = publicaciones_list.filter(categorias__in= [category])
 
 		paginator =Paginator(publicaciones_list,1)
 
@@ -89,3 +101,23 @@ class ContenidoUpdate(ContenidoRequiredMixin,UpdateView):
 class ContenidoDelete(ContenidoRequiredMixin, DeleteView):
 	model = Noticia
 	success_url = reverse_lazy('contenido')
+
+
+def BuscarCategorias(request):
+    json_response = {}
+    email = request.GET.get('email', None)
+    tipo = request.GET.get('type', None)
+    categorias=[]
+
+    if tipo == "True":
+    	categorias_ = Interes.objects.all()
+    	for categoria in categorias_:
+    		categorias.append(categoria.nombre)
+    else: 
+        categorias_piv = Intereses.objects.filter(egresado__email=email)
+        for categoria_piv in categorias_piv:
+            categorias.append(categoria_piv.interes.nombre)
+    
+    json_response['categorias']= categorias
+    print(json_response) 
+    return JsonResponse(json_response)

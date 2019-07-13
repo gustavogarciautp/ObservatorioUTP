@@ -8,6 +8,38 @@ from app_registrarse.models import Egresado
 from django.urls import reverse_lazy, reverse
 from app_registrarse.views import EgresadoRequiredMixin
 
+
+from pubnub.pnconfiguration import PNConfiguration
+from pubnub.pubnub import PubNub
+from pubnub.enums import PNStatusCategory
+from pubnub.callbacks import SubscribeCallback 
+
+pnconfig = PNConfiguration()
+pnconfig.subscribe_key = "sub-c-d21b3856-9daf-11e9-b575-2aabfc211be0"
+pnconfig.publish_key = "pub-c-a0748278-adf4-4a7b-b141-c2d7a2571a42"
+pnconfig.ssl = False
+ 
+pubnub = PubNub(pnconfig)
+
+"""
+class MyListener(SubscribeCallback):
+    def status(self, pubnub, status):
+        if status.category == PNStatusCategory.PNConnectedCategory:
+            pass
+ 
+    def message(self, pubnub, message):
+        print(message.message)
+ 
+    def presence(self, pubnub, presence):
+        pass
+ 
+my_listener = MyListener()
+ 
+pubnub.add_listener(my_listener)
+ 
+pubnub.subscribe().channels("sala1").execute()
+"""
+
 # Create your views here.
 class ThreadList(EgresadoRequiredMixin, TemplateView):
 	template_name = "messenger/thread_list.html"
@@ -26,9 +58,14 @@ def add_message(request, pk):
 	if request.user.is_authenticated and request.user.is_egresado:
 		content = request.GET.get('content', None)
 		if content:
+			pubnub.publish().channel(pk).message({"Remitente":request.user.nombres,"Mensaje": content}).sync()
+
 			thread = get_object_or_404(Thread, pk= pk)
 			message = Message.objects.create(user= request.user, content= content)
 			thread.messages.add(message)
+			print(message.created)
+			print(type(message.created))
+			print(str(message.created))
 			json_response['created']= True
 			if len(thread.messages.all()) is 1:
 				json_response['first'] = True

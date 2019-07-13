@@ -2,6 +2,8 @@
 {% load static %}
 {% block title %}Hilo{% endblock %}
 {% block content %}
+<script src="https://cdn.pubnub.com/sdk/javascript/pubnub.4.24.3.js"></script>
+
 <style>
   .avatar  { width:50px; height:50px; float:left; margin-right:10px; }
   .thread  { max-height:300px; overflow-y:auto; padding:0 0.5em;} 
@@ -15,6 +17,8 @@
         <div class="row">
           <!-- Hilos de conversación -->
           <div class="col-md-4">
+            <input type="hidden" id="userId" value={{request.user}}>
+            <input type="hidden" id="threadId" value={{thread.pk}}>
             <!-- Con una búsqueda inversa user.threads también podemos conseguir los hilos de un usuario -->
             {% for thread in request.user.threads.all %}
               <!-- Sólo mostraremos un Thread si tiene como mínimo 1 mensaje -->
@@ -53,7 +57,7 @@
               {% for message in object.messages.all %}
                 <!-- Dependiendo del usuario asignamos una clase con un color de fondo u otro en el mensaje -->
                 <div {% if request.user == message.user %}class="mine mb-3"{% else %}class="other mb-3"{% endif %}>
-                  <small><i>Hace {{thread.messages.last.created|timesince}}</i></small><br>
+                  <small><i>Hace {{message.created|timesince}}</i></small><br>
                   {{message.content}}
                 </div>
               {% endfor %}
@@ -62,6 +66,47 @@
             <textarea id="content" class="form-control mb-2" rows="2" placeholder="Escribe tu mensaje aquí"></textarea>
             <button id="send" class="btn btn-primary btn-sm btn-block" disabled>Enviar mensaje</button>
             <script>
+              pubnub = new PubNub({
+                  publishKey : 'pub-c-a0748278-adf4-4a7b-b141-c2d7a2571a42',
+                  subscribeKey :'sub-c-d21b3856-9daf-11e9-b575-2aabfc211be0'
+              })
+                
+              pubnub.addListener({
+                  message: function(msg) {
+                      //hilo=document.getElementById("thread");
+                      var user_id=document.getElementById("userId").value;
+                      console.log(user_id== msg.message["Remitente"])
+                      if (user_id != msg.message["Remitente"]){
+                        var div_thread=document.getElementById("thread");
+                        var message_html= document.createElement("div");
+                        var small_html = document.createElement("small");
+                        var i_html = document.createElement("i");
+                        var text_html= document.createElement("text");
+                        var br = document.createElement('br');
+
+                        message_html.className= "other mb-3";
+                        i_html.innerHTML= "Hace unos segundos";
+                        small_html.appendChild(i_html);
+                        text_html.innerHTML= msg.message["Mensaje"];
+                        message_html.appendChild(small_html);
+                        message_html.appendChild(br);
+                        message_html.appendChild(text_html);
+                        div_thread.appendChild(message_html);
+                        ScrollBottomInThread(); 
+                      }
+                  },
+                  presence: function(presenceEvent) {
+                      // handle presence
+                  }
+              })
+
+              var threadId = document.getElementById("threadId").value; 
+              console.log(threadId);     
+              pubnub.subscribe({
+                  channels: [threadId] 
+              });
+
+
               var send = document.getElementById("send");
               send.addEventListener("click", function(){
                 var content = encodeURIComponent(document.getElementById("content").value); // &

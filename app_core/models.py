@@ -148,7 +148,7 @@ class Administrador (User):
 
     def has_perm(self, perm, obj=None):
         print(perm)
-        patron=re.compile(r'administrador|city|country|region|add_egresado|delete_egresado')
+        patron=re.compile(r'administrador|city|country|region|add_egresado|delete_egresado|add_intereses|change_intereses|delete_intereses')
         m= patron.search(perm)
         if m:
             return False
@@ -224,9 +224,22 @@ class Egresado (User):
         return self.nombres
 
 
+@receiver(pre_save, sender= Egresado)
+def make_first_password(sender, instance, **kwargs):
+    if not kwargs.get('created', False):  
+
+        inst_obj=Egresado.objects.filter(email=instance.email)
+        obj= inst_obj[0]
+        if not obj.activacion and instance.activacion:
+            asunto= 'Cuenta activada'
+
+            html_content='<p>¡Hola '+instance.nombres+'!</p></br><p>Tu cuenta en Observatorio de Egresados UTP ha sido <b>activada</b>.</p></br><p>Puedes ingresar usando los datos que registraste.</p></br><p><a href="http://observatorioutp.pythonanywhere.com/login/">Haz clic aquí para ir a la página</a></p></br><p>¡Gracias por usar nuestro sitio!</p></br><p>El equipo de <a href="http://observatorioutp.pythonanywhere.com">Observatorio Egresados</a></p>'
+            msg = EmailMultiAlternatives(asunto, '', to=[instance.email])
+            msg.attach_alternative(html_content, "text/html")
+            msg.send()
 
 class Interes(models.Model):
-    nombre = models.CharField(verbose_name= "Nombre", default='', null=True, blank= False, max_length=30)
+    nombre = models.CharField(verbose_name= "Nombre", default='', null=False, blank= False, unique = True, max_length=30)
     created = models.DateTimeField(auto_now_add= True, verbose_name="Fecha de creación")
     updated = models.DateTimeField(auto_now=True, verbose_name="Fecha de edición")
 
