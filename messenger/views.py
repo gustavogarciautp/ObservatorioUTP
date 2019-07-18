@@ -7,6 +7,8 @@ from django.http import Http404, JsonResponse
 from app_registrarse.models import Egresado
 from django.urls import reverse_lazy, reverse
 from app_registrarse.views import EgresadoRequiredMixin
+from django.views import View
+from app_core.models import Circulo
 
 
 from pubnub.pnconfiguration import PNConfiguration
@@ -42,16 +44,21 @@ pubnub.subscribe().channels("sala1").execute()
 
 # Create your views here.
 class ThreadList(EgresadoRequiredMixin, TemplateView):
+
 	template_name = "messenger/thread_list.html"
+
 
 class ThreadDetail(EgresadoRequiredMixin, DetailView):
 	model = Thread
 
+
 	def get_object(self):
+		#print("2222222222222222S")
 		obj = super(ThreadDetail, self).get_object()
-		if self.request.user not in obj.users.all():
+		if self.request.user not in obj.users.all() or len(obj.users.all())<2:
 			raise Http404
 		return obj
+
 
 def add_message(request, pk):
 	json_response = {'created': False}

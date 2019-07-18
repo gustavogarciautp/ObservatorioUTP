@@ -1,6 +1,6 @@
 from django.shortcuts import render, get_object_or_404, redirect
 from .forms import LoginForm, Recuperar1Form, Recuperar2Form, EditProfileForm, FirstLoginAdmin, ChangeEgresadoPasswordForm
-from .models import Administrador, Egresado, User, SuperUser
+from .models import Administrador, Egresado, User, SuperUser, Circulo
 from django.core.mail import EmailMultiAlternatives
 from django.urls import reverse, resolve 
 from django.contrib.auth import authenticate, logout
@@ -18,26 +18,28 @@ from django.contrib.auth import update_session_auth_hash
 def login(request):
     #print(request.user.is_authenticated)
     current_url= resolve(request.path_info).url_name
-
+    print(request.path)
     if not request.user.is_authenticated:
         login_form = LoginForm() 
-        if request.method == 'POST': 
+        if request.method == 'POST':
             login_form = LoginForm(data= request.POST) 
             if login_form.is_valid():  
                 email= request.POST.get('email')
                 password=request.POST.get('contraseña')
-                #current_url= resolve(request.path_info).url_name
+                nextpage= request.POST.get('next','')
                 try:
                     if current_url=='login_':
                         user = authenticate(request, email=email, password=password)    
                         if user:
                             if not user.activate():
-                                return redirect(reverse('login_')+'?fail') 
+                                return redirect(reverse('login_')+'?next='+nextpage+'&fail') 
                             else:
                                 loginB(request, user, 'app_core.backends.EgresadoBackend')
+                                if nextpage:
+                                    return redirect (nextpage)
                                 return redirect(reverse('principal'))
                         else:
-                            return redirect(reverse('login_')+'?nofound')
+                            return redirect(reverse('login_')+'?next='+nextpage+'&nofound')
                     elif current_url=='admin_':
                         user = authenticate(request, email=email, password=password)
                         loginB(request, user, 'app_core.backends.AdminBackend')
@@ -184,8 +186,21 @@ def ChangeEgresadoPassword(request):
                     request.user.set_password(contraseñanueva)
                     request.user.save()
                     update_session_auth_hash(request, request.user)
-                    return redirect(reverse('perfil'))
+                    return redirect(reverse('change_egresado_password')+'?ok')
         return render(request, "app_core/egresado_change_password.html", {'form':formulario})
     else:
         return redirect(reverse('login_'))
 
+def agregar(request, pk):
+    amigo = Egresado.objects.get(pk=pk)
+    
+    Circulo.agregar_amigo(request.user, amigo)
+    
+    return redirect('profiles:friends')
+
+def eliminar(request, pk):
+    amigo = Egresado.objects.get(pk=pk)
+    
+    Circulo.borrar_amigo(request.user, amigo)
+    
+    return redirect('profiles:friends')

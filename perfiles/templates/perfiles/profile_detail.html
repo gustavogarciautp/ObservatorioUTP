@@ -15,11 +15,21 @@
                 {% else %}
                   <img src="{{egresado.avatar.url}}" class="img-fluid">
                 {% endif %}
-              {% if request.user != egresado %}
+              {% if request.user != egresado and amigo %}
                 <a href="{% url 'messenger:start' egresado.email %}" class="btn btn-primary btn-sm btn-block mt-3">
                   Enviar mensaje
                 </a>
+                <br>
               {% endif %}
+              {% if not amigo %}
+                <a href= {% url 'agregar'  pk=egresado.pk %}  class="btn btn-primary btn-sm btn-block mt-3">
+                  Agregar a amigos
+                </a>
+                {% else %}
+                 <a href= {% url 'eliminar'  pk=egresado.pk %}  class="btn btn-primary btn-sm btn-block mt-3">
+                  Eliminar de amigos
+                </a>
+                {% endif %}
             </div>
             <!-- Campos -->
             <div class="col-md-10">

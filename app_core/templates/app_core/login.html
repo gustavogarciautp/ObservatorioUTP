@@ -42,13 +42,16 @@
 						</div>
 						{{form.contraseña}}
 					</div>
+					{% if request.GET.next %}
+					<input type="hidden" name="next" value="{{request.GET.next}}">
+					{% endif %}
 					<div class="form-group">
 						<input type="submit" value="Entrar" class="btn float-right login_btn">
 					</div>
 
 				</form>
 				{% if 'fail' in request.GET %}
-              	<p style="color:white;"><b>La cuenta no ha sido activada</b></p>
+              	<p style="color:white;"><b>La cuenta no esta activada</b></p>
               	{% elif 'nofound' in request.GET %}
               	<p style="color:white;"><b>Email y contraseña no coinciden</b></p>
               	{% elif 'registrado' in request.GET %}

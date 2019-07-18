@@ -147,8 +147,7 @@ class Administrador (User):
     is_superusuario = models.BooleanField(default=False)
 
     def has_perm(self, perm, obj=None):
-        print(perm)
-        patron=re.compile(r'administrador|city|country|region|add_egresado|delete_egresado|add_intereses|change_intereses|delete_intereses')
+        patron=re.compile(r'administrador|city|country|region|add_egresado|add_intereses|change_intereses')
         m= patron.search(perm)
         if m:
             return False
@@ -189,7 +188,7 @@ def make_first_password(sender, instance, **kwargs):
 
 
 class Egresado (User):
-    activacion= models.BooleanField(verbose_name= "Activacion", default= False, null=True, blank= False)
+    activacion= models.BooleanField(verbose_name= "Activacion", default= False, null=False, blank= False)
     fecha_nacimiento = models.DateField(verbose_name="Fecha de nacimiento",null= True, blank= True) #campo opcional
     is_active = models.BooleanField(default=True)
     is_egresado = models.BooleanField(default=True)
@@ -225,7 +224,7 @@ class Egresado (User):
 
 
 @receiver(pre_save, sender= Egresado)
-def make_first_password(sender, instance, **kwargs):
+def egresado_signal(sender, instance, **kwargs):
     if not kwargs.get('created', False):  
 
         inst_obj=Egresado.objects.filter(email=instance.email)
@@ -233,10 +232,37 @@ def make_first_password(sender, instance, **kwargs):
         if not obj.activacion and instance.activacion:
             asunto= 'Cuenta activada'
 
-            html_content='<p>¡Hola '+instance.nombres+'!</p></br><p>Tu cuenta en Observatorio de Egresados UTP ha sido <b>activada</b>.</p></br><p>Puedes ingresar usando los datos que registraste.</p></br><p><a href="http://observatorioutp.pythonanywhere.com/login/">Haz clic aquí para ir a la página</a></p></br><p>¡Gracias por usar nuestro sitio!</p></br><p>El equipo de <a href="http://observatorioutp.pythonanywhere.com">Observatorio Egresados</a></p>'
+            html_content='<p>¡Hola '+instance.nombres+'!</br><p>Tu cuenta en Observatorio de Egresados UTP ha sido <b>activada</b>.</p></br><p>Puedes ingresar usando los datos que registraste.</p></br><p><a href="http://observatorioutp.pythonanywhere.com/login/">Haz clic aquí para ir a la página</a></p></br><p>¡Gracias por usar nuestro sitio!</p></br><p>El equipo de <a href="http://observatorioutp.pythonanywhere.com">Observatorio Egresados</a></p>'
             msg = EmailMultiAlternatives(asunto, '', to=[instance.email])
             msg.attach_alternative(html_content, "text/html")
             msg.send()
+
+        if obj.activacion and not instance.activacion:
+            asunto= 'Cuenta desactivada'
+
+            html_content='<p>¡Hola '+instance.nombres+'!</br><p>Tu cuenta en Observatorio de Egresados UTP ha sido <b>desactivada</b>.</p></br><p>Para solicitar una reactivación de tu cuenta u obtener más información contactate con nosotros a través de nuestro correo oficial <b>observatorioutpe@gmail.com</b></p><br><p>¡Gracias por usar nuestro sitio!</p></br><p>El equipo de <a href="http://observatorioutp.pythonanywhere.com">Observatorio Egresados</a></p>'
+            msg = EmailMultiAlternatives(asunto, '', to=[instance.email])
+            msg.attach_alternative(html_content, "text/html")
+            msg.send()
+
+class Circulo(models.Model):
+    amigos = models.ManyToManyField(Egresado)
+    usuario = models.ForeignKey(Egresado, on_delete= models.CASCADE,  related_name = "Usuario", null=True)
+
+    @classmethod
+    def agregar_amigo(cls, current_user, new_friend):
+        friend, created = cls.objects.get_or_create(
+            usuario=current_user
+        )
+        friend.amigos.add(new_friend)
+
+    @classmethod
+    def borrar_amigo(cls, current_user, new_friend):
+        friend, created = cls.objects.get_or_create(
+            usuario=current_user
+        )
+        friend.amigos.remove(new_friend)
+   
 
 class Interes(models.Model):
     nombre = models.CharField(verbose_name= "Nombre", default='', null=False, blank= False, unique = True, max_length=30)

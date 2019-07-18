@@ -5,6 +5,8 @@
 {% block title %}Publicaciones{% endblock  %}
 
 {% block content %}
+ 
+<h2 align="center">Categoria: {{category}}</h2>
 
 {% for noticia in publicaciones %} <!--busqueda inversa: obtengo todas las instancias del modelo relacionado con el primer modelo-->
 
@@ -41,6 +43,7 @@
                 </em>
             </span>
             </p>
+            Publicado: {{noticia.created}}
           </div>
 
         </div>

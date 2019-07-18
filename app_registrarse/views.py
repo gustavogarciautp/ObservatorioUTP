@@ -4,7 +4,7 @@ from django.shortcuts import render, redirect ##redirect sirve para redirecciona
 from .forms import RegistroForm, EgresadoForm, EmailForm, EgresadoForm, InteresesForm
 from django.core.mail import EmailMessage
 from django.urls import reverse
-from  app_core.models import Egresado, Interes, Intereses, EgresadosUTP, Country, City
+from  app_core.models import Egresado, Interes, Intereses, EgresadosUTP, Country, City, Circulo
 from datetime import datetime
 import hashlib
 import requests
@@ -20,6 +20,7 @@ from django.forms.widgets import CheckboxSelectMultiple
 from django.contrib.auth.decorators import login_required
 from django.utils.decorators import method_decorator
 from django.http import Http404, JsonResponse
+from django.contrib.auth import logout
 
 #from .models import Perfil
 
@@ -68,6 +69,7 @@ def intereses (request):
                 for pk in add:
                     Intereses.objects.get_or_create(interes= Interes.objects.get(pk=pk), egresado=obj)
 
+                return redirect(reverse('intereses')+'?ok') 
         return render(request, "app_registrarse/intereses.html", {'form':intereses})
     else:
         return redirect(reverse('login_'))
@@ -105,6 +107,7 @@ def registrarse(request):
 
             obj = Egresado(DNI=DNI, Tipo_de_identificacion=Tipo_de_identificacion, nombres=nombres, apellidos=apellidos, pais=pais, ciudad=ciudad,fecha_nacimiento=date, genero=genero,email=email, activacion= activacion, validado= validado, is_staff=False, is_superuser=False)
             obj.set_password(contraseña)
+            Circulo.agregar_amigo(obj, obj)
             obj.save()
             return redirect(reverse('login_')+'?registrado')
 
@@ -131,6 +134,10 @@ class ProfileUpdate(EgresadoRequiredMixin, UpdateView):
     def get_form(self,form_class=None):
         form = super(ProfileUpdate, self).get_form()
         form.fields['fecha_nacimiento'].widget=forms.SelectDateWidget(attrs= {'class':'form-control col-md-4'},months=months, years=years, empty_label=("Año", "Mes", "Día"),)
+        
+        if form.is_valid():
+            if form['activacion'].value()==False:
+                logout(self.request)
 
         return form
 

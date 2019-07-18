@@ -18,7 +18,7 @@
                 <div class="mb-3">
                   <!-- Recorremos los miembros del hilo menos el propio request.user -->
                   {% for user in thread.users.all %}
-                    {% if user != request.user %}   
+                    {% if user != request.user and user %}   
                       <!-- Mostramos el avatar del miembro -->  
                       {% if user.perfil.avatar %}
                         <img src="{{user.perfil.avatar.url}}" class="avatar">

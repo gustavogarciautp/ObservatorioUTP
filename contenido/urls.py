@@ -1,4 +1,4 @@
-from django.urls import path
+from django.urls import path, include
 from .views import noticia, categoria, NoticiaFull, ContenidoCreate, ContenidoUpdate, ContenidoDelete
 
 contenido_patterns = [
@@ -8,5 +8,4 @@ contenido_patterns = [
 	path('create/', ContenidoCreate.as_view(), name='create'),
 	path('update/<int:pk>', ContenidoUpdate.as_view(), name='update'),
 	path('delete/<int:pk>', ContenidoDelete.as_view(), name='delete')
-
 	]

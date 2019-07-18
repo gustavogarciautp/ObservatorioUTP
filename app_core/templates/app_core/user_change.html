@@ -1,12 +1,45 @@
+
 {% extends "admin/base_site.html" %}
 {% block content %}
+
 <div class="containerss" id="cont">
-    <form method="post">
-        {% csrf_token %}
-        {{ form.as_p }}
-	<input id ="button" type="submit" value="Grabar" class="default" name="_save">    
-	</form>
-    <br>
+    <style type="text/css">
+        form {
+            text-align: left;
+            width: 50em;
+            margin: 0 auto;
+            padding: 1em;
+            border: 1px solid #E0E0E0;
+            font-size: 1em;
+            line-height: 1;
+            box-shadow: 1px 1px 3px rgba(0, 0, 0, 0.4);
+            background: #F5F5F5;
+        }
+        label {
+            display: inline-block;
+            text-align: left;
+            width: 15em;
+            vertical-align: bottom;
+            border-bottom: 1px dashed #CDCDCD;
+        }
+        input {
+            display: inline-block;
+            width: 15em;
+        }
+        .subm-rest input {
+            width: 30em;
+            margin: 1em;
+        }
+    </style>
+
+    <form method="post">        
+        {% csrf_token %}    
+        {{ form.as_p }} 
+       <center>
+         <input id ="button" type="submit" value="Grabar" class="default" name="_save">   
+       </center>    
+    </form>
+
 </div>
 
 <script>
@@ -16,9 +49,10 @@
         select_ciudad= document.getElementById("id_ciudad");
         select_password= document.getElementById("id_password");
         select_password.nextElementSibling.remove();
+        select_password.previousElementSibling.remove();
         select_password.remove();
         select_button= document.getElementById("button");
-        select_button.previousElementSibling.previousElementSibling.remove();
+        //select_button.previousElementSibling.previou.remove();
         
         select_genero=document.getElementById("id_genero");
         select_genero.nextElementSibling.remove();

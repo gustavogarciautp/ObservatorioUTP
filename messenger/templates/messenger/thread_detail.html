@@ -20,12 +20,12 @@
             <input type="hidden" id="userId" value={{request.user}}>
             <input type="hidden" id="threadId" value={{thread.pk}}>
             <!-- Con una búsqueda inversa user.threads también podemos conseguir los hilos de un usuario -->
-            {% for thread in request.user.threads.all %}
+            {% for thread_ in request.user.threads.all %}
               <!-- Sólo mostraremos un Thread si tiene como mínimo 1 mensaje -->
-              {% if thread.messages.all|length > 0 %}
+              {% if thread_.messages.all|length > 0 %}
                 <div class="mb-3">
                   <!-- Recorremos los miembros del hilo menos el propio request.user -->
-                  {% for user in thread.users.all %}
+                  {% for user in thread_.users.all %}
                     {% if user != request.user %}     
                       <!-- Mostramos el avatar del miembro -->                
                       {% if user.perfil.avatar %}
@@ -35,8 +35,8 @@
                       {% endif %}
                       <!-- Mostramos la información del miembro --> 
                       <div>
-                        <a href="{% url 'messenger:detail' thread.pk %}">{{user}}</a><br>
-                        <small><i>Hace {{ thread.messages.last.created | timesince }}</i></small>
+                        <a href="{% url 'messenger:detail' thread_.pk %}">{{user}}</a><br>
+                        <small><i>Hace {{ thread_.messages.last.created | timesince }}</i></small>
                       </div>
                     {% endif %}
                   {% endfor %}

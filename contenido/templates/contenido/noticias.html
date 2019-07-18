@@ -32,6 +32,8 @@ function listcategory() {
   }
 </script>
 
+{% if request.user.is_administrador %}
+
 <!DOCTYPE html>
 <html lang="es">
 <body>
@@ -40,9 +42,7 @@ function listcategory() {
       <div class="row">
         <div class="col-xl-9 mx-auto">
           <div class="cta-innerv text-center rounded">
-          {% if request.user.is_administrador or request.user.is_superusuario %}
           <br><br><br><br>
-          {% endif %}
           <input type="hidden" id="email" value={{request.user.email}}>
           <input type="hidden" id="tipo" value={{request.user.is_superuser}}>
             <form method="GET" action="/publicaciones/">
@@ -64,60 +64,60 @@ function listcategory() {
   </section>
 </body>
 </html>
-
-{% for publicacion in publicaciones %}
+{% endif %}
 
 <!DOCTYPE html>
 <html lang="es">
   <head>
-    <!-- <link rel="stylesheet" type="text/css" href="../../static/contenido/css/noticias.css"> -->
-  </head>
-<body>
-  <section class="page-section cta">
-    <div class="container">
-      <div class="row">
-        <div class="col-xl-9 mx-auto">
-          <div class="cta-innerv text-center rounded">
-            <h2 class="section-heading mb-5">
-              <span class="section-heading-lower">{{publicacion.titulo}}</span>
-            </h2>
-            <p class="mb-0">
-              <img class="mx-auto d-flex rounded img-fluid mb-3 mb-lg-0" src={{publicacion.Image.url}} alt="">
-            </p>
-            <br>
-            <br>
-            <div class="text-justify">
-            <p class="mb-0 mbt">
-              {{publicacion.descripcion|striptags|safe|linebreaks|truncatechars:'500'}}  <!--Por defecto django ignora los saltos de linea, para que los tenga en cuenta se utilizar el tag linebreaks-->
-            </p>
+    <body>               
+      <section class="page-section cta">      
+        <div class="container">          
+          <div class="row">                          
+            <div class="col-xl-10 mx-auto">
+            {% for publicacion in publicaciones %}                
+              <div style="padding: 10px; float: left; width: 50%; text-align: justify;">                 
+                <div class="cta-innerv text-center rounded">                  
+                  <h2 class="section-heading mb-5">
+                    <span class="section-heading-lower" style="font-size: 60%" >{{publicacion.titulo}}</span>
+                  </h2>
+                  <p class="mb-0">
+                    <img class="mx-auto d-flex rounded img-fluid mb-3 mb-lg-0" src={{publicacion.Image.url}} alt="" style="width: 400px; height: 280px" >                   
+                  </p>
+                  <br>
+                  <div class="text-justify">
+                  <p class="mb-0 mbt">
+                    {{publicacion.descripcion|striptags|safe|linebreaks|truncatechars:'250'}}  <!--Por defecto django ignora los saltos de linea, para que los tenga en cuenta se utilizar el tag linebreaks-->
+                  </p>
+                  </div>
+                  <p><a href="{% url 'noticefull' publicacion.id publicacion.titulo|slugify %}">Leer más</a>
+                  </p>
+                  <p class="mb-0 mbt">
+                    <!--<span class="section-heading-under">Publicado por <em><b>{{post.author}}</b></em> en -->
+                    <!--<a href="#" class="link">General</a>, <a href="#" class="link">Ofertas</a></em>-->
+                      <em>
+                        {% for categoria in publicacion.categorias.all %}
+                          <a href="{% url 'categoria' categoria.id %}" class="link">{{categoria.nombre}}</a>{% if not forloop.last %},{% endif %}
+                        {% endfor %}
+                      </em>
+                  </p>
+                  Publicado: {{publicacion.created}}
+                  <p>
+                  {% if request.user.is_administrador %}
+                  <a href="{% url 'update' publicacion.id %}">Editar</a>
+                  |<a href="{% url 'delete' publicacion.id %}">Borrar</a>
+                  {% endif %}
+                  </p>
+                </div>              
+              </div>
+              {% endfor %}
             </div>
-            <p><a href="{% url 'noticefull' publicacion.id publicacion.titulo|slugify %}">Leer más</a>
-          </p>
-            <p class="mb-0 mbt">
-              <!--<span class="section-heading-under">Publicado por <em><b>{{post.author}}</b></em> en -->
-              <!--<a href="#" class="link">General</a>, <a href="#" class="link">Ofertas</a></em>-->
-                <em>
-                  {% for categoria in publicacion.categorias.all %}
-                    <a href="{% url 'categoria' categoria.id %}" class="link">{{categoria.nombre}}</a>{% if not forloop.last %},{% endif %}
-                  {% endfor %}
-                </em>
-            </span>
-            </p>
-            <p>
-            {% if request.user.is_administrador %}
-            <a href="{% url 'update' publicacion.id %}">Editar</a>
-            |<a href="{% url 'delete' publicacion.id %}">Borrar</a>
-          {% endif %}
-            </p>
           </div>
-
         </div>
-      </div>
-    </div>
-  </section>
-</body>
+      </section>
+    </body>
+  </head>
 </html>
-{% endfor %}
+
 </br>
 <nav aria-label="Page navigation">
   <ul class="pagination justify-content-center">

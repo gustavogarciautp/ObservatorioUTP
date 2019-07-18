@@ -13,7 +13,7 @@ from django.http import JsonResponse
 # Create your views here.
 
 def noticia(request):
-	if request.user.is_authenticated:
+	if request.user.is_authenticated and not request.user.is_superusuario:
 		publicaciones_list=[]
 		template_base=''
 		title = request.GET.get("title")
@@ -42,7 +42,7 @@ def noticia(request):
 			category=Interes.objects.get(nombre=category)
 			publicaciones_list = publicaciones_list.filter(categorias__in= [category])
 
-		paginator =Paginator(publicaciones_list,1)
+		paginator =Paginator(publicaciones_list,4)
 
 		page = request.GET.get('page')
 		publicaciones_page = paginator.get_page(page)
@@ -52,7 +52,7 @@ def noticia(request):
 		return redirect(reverse('login_'))
 
 def categoria(request, categoria_id):
-	if request.user.is_authenticated:
+	if request.user.is_authenticated and not request.user.is_superusuario:
 		if request.user.is_egresado:
 			template_base="app_core/principal.html"
 		else:
@@ -67,29 +67,37 @@ def categoria(request, categoria_id):
 		page = request.GET.get('page')
 		publicaciones_page = paginator.get_page(page)
 
-		return render(request, "contenido/categorias.html", {'paginator':paginator,'publicaciones':publicaciones_page, 'template_base': template_base})#, 'posts':posts})
+		return render(request, "contenido/categorias.html", {'paginator':paginator,'publicaciones':publicaciones_page, 'template_base': template_base, 'category': category.nombre})#, 'posts':posts})
 	else:
 		return redirect(reverse('login_'))
 
 class ContenidoRequiredMixin(object):
 
     def dispatch(self, request, *args, **kwargs):
-        if request.user.is_authenticated:
+        if request.user.is_authenticated and not request.user.is_superusuario:
             return super(ContenidoRequiredMixin, self).dispatch(request, *args, *kwargs)
         else:
-            return redirect(reverse_lazy('login_'))
+            return redirect(reverse_lazy('login_')+'?next='+request.path_info)
+
+class ContenidoAdminRequiredMixin(object):
+
+    def dispatch(self, request, *args, **kwargs):
+        if request.user.is_authenticated and request.user.is_administrador:
+            return super(ContenidoAdminRequiredMixin, self).dispatch(request, *args, *kwargs)
+        else:
+            return redirect(reverse_lazy('login_')+'?next='+request.path_info)
 
 class NoticiaFull(ContenidoRequiredMixin, DetailView):
     model = Noticia
 
 
-class ContenidoCreate(ContenidoRequiredMixin,CreateView):
+class ContenidoCreate(ContenidoAdminRequiredMixin,CreateView):
 	model = Noticia
 	form_class = NoticiaForm
 	success_url= reverse_lazy('contenido')
 
 
-class ContenidoUpdate(ContenidoRequiredMixin,UpdateView):
+class ContenidoUpdate(ContenidoAdminRequiredMixin,UpdateView):
 	model = Noticia
 	form_class = NoticiaForm
 	template_name_suffix= '_update_form'
@@ -98,7 +106,7 @@ class ContenidoUpdate(ContenidoRequiredMixin,UpdateView):
 		return reverse_lazy('update', args=[self.object.id]) + '?ok'
 
 
-class ContenidoDelete(ContenidoRequiredMixin, DeleteView):
+class ContenidoDelete(ContenidoAdminRequiredMixin, DeleteView):
 	model = Noticia
 	success_url = reverse_lazy('contenido')
 

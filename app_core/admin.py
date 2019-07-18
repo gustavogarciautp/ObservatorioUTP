@@ -52,6 +52,9 @@ class InteresEgresado(admin.ModelAdmin):
 
 class InteresesEgresado(admin.ModelAdmin):
 	readonly_fields = ['interes','egresado']
+	search_fields = ['egresado']
+	list_filter = ['interes']
+	list_display = ['interes','egresado']
 	
 
 admin_site.register(Interes, InteresEgresado)

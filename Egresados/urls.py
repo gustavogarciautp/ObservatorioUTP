@@ -38,7 +38,10 @@ urlpatterns = [
     path('registrarse/', app_registrarse_views.registrarse, name='registrarse'),
     path('', app_core_views.home, name="home_page"),
     path('jet/', include('jet.urls', 'jet')),
-	path('login/', app_core_views.login,name='login_'),
+    path('login/', app_core_views.login,name='login_'),
+    path('agregar/<pk>/', app_core_views.agregar,name='agregar'),
+    path('eliminar/<pk>/', app_core_views.eliminar,name='eliminar'),
+
     path('intereses/', app_registrarse_views.intereses, name='intereses'),
     path('ad-min/', app_core_views.login, name='admin_'),
     path('admin_admin/login/', app_core_views.login),
@@ -74,6 +77,7 @@ urlpatterns = [
     path('ckeditor/', include('ckeditor_uploader.urls')),
 
     path('categories/', BuscarCategorias, name='categories'),
+    path('ckeditor/', include("ckeditor_uploader.urls")),
 
 ]
 

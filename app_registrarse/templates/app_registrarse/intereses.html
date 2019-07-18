@@ -8,6 +8,11 @@
   <div class="container" id="InteresesForm">
     <div class="row mt-3">
       <div class="col-md-9 mx-auto mb-5">
+        {% if 'ok' in request.GET %}
+        <p style="color: green;">
+          Los cambios se han guardado correctamente.
+        </p>
+        {% endif %}
         <form action="" method="POST">{% csrf_token %}
           <h3 class="mb-4">Selecciona tus intereses</h3>
           <div class="form-group">

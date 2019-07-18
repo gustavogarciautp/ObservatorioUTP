@@ -138,7 +138,7 @@ class RegistroForm(forms.Form):
 class EgresadoForm(forms.ModelForm):
     class Meta:
         model = Egresado
-        fields = ['pais', 'ciudad','fecha_nacimiento', 'bio', 'avatar', 'nombres', 'apellidos', 'avatar_p', 'pais_p','bio_p', 'nombres_p', 'fecha_p', 'email_p','ciudad_p']
+        fields = ['pais', 'ciudad','fecha_nacimiento', 'bio', 'avatar', 'nombres', 'apellidos', 'avatar_p', 'pais_p','bio_p', 'nombres_p', 'fecha_p', 'email_p','ciudad_p','activacion']
 
         widgets = {
             'avatar': forms.ClearableFileInput(attrs={'class': 'form-control-file mt-3'}),

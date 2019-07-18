@@ -21,6 +21,8 @@ BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 
 # SECURITY WARNING: keep the secret key used in production secret!
 SECRET_KEY = 'n=g1vfl8m54(awna+=n8yb$$-xldekb4)_$d=(1*p+dcb8&m&='
+
+#Local
 RECAPTCHA_PUBLIC_KEY = '6LdaUqcUAAAAAOK3xzjo-oknTM33fbXExlcwFG0z'
 RECAPTCHA_PRIVATE_KEY = '6LdaUqcUAAAAANtBkskWrDSPz2SezQT_i3jsSRon'
 
@@ -146,8 +148,8 @@ STATIC_ROOT = os.path.join (BASE_DIR, 'staticfiles')
 
 EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
 EMAIL_HOST = 'smtp.gmail.com'
-EMAIL_HOST_USER = 'gustavoga10a2013@gmail.com'
-EMAIL_HOST_PASSWORD = 'universidadmanchester1nn'
+EMAIL_HOST_USER = 'observatorioutpe@gmail.com'
+EMAIL_HOST_PASSWORD = 'Pereira2019'
 EMAIL_PORT = '587'
 EMAIL_USE_TLS   = True
 
@@ -177,22 +179,25 @@ CKEDITOR_CONFIGS = {
     }
 }
 
-
+"""
 CKEDITOR_CONFIGS = {
     'default': {
         'toolbar': 'full',
         'height': 300,
         'width': 'auto',
+         'extraPlugins': ','.join(['youtube']),
     },
 }
 """
 
+
 CKEDITOR_CONFIGS = {
    'default': {
+       'toolbar': 'full',
        'toolbar_Full': [
             ['Styles', 'Format', 'Bold', 'Italic', 'Underline', 'Strike', 'SpellChecker', 'Undo', 'Redo'],
             ['Link', 'Unlink', 'Anchor'],
-            ['Table', 'HorizontalRule'],
+            ['Image','Table', 'HorizontalRule'],
             ['TextColor', 'BGColor'],
             ['Smiley', 'SpecialChar'], ['Source'],
             ['JustifyLeft','JustifyCenter','JustifyRight','JustifyBlock'],
@@ -200,10 +205,10 @@ CKEDITOR_CONFIGS = {
             ['Indent','Outdent'],
             ['Maximize'],
         ],
-        'extraPlugins': 'justify,liststyle,indent',
+        'extraPlugins': ','.join(['video', 'youtube', 'justify','liststyle','indent']),
         'height': 300,
         'width': 'auto',
    },
 }
-
-CKEDITOR_UPLOAD_PATH = '/uploads/'
+"""
+CKEDITOR_UPLOAD_PATH = 'uploads/'

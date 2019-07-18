@@ -28,8 +28,8 @@
       <div class="sidebar-heading">{{request.user.email}}</div>
       <div class="list-group list-group-flush">
         <a href="{% url 'contenido' %}" class="list-group-item list-group-item-action {% if request.path|slice:'0:15' == '/publicaciones/' %}active{% endif %}">Contenido</a>
-        <a href="#" class="list-group-item list-group-item-action">Circulo de amigos</a>
-        <a href="{% url 'profiles:list' %}" class="list-group-item list-group-item-action {% if request.path|slice:'0:10' == '/profiles/' %}active{% endif %}">Buscar amigos</a>
+        <a href="{% url 'profiles:friends' %}" class="list-group-item list-group-item-action {% if request.path|slice:'0:18' == '/profiles/friends' %}active{% endif %}"">Circulo de amigos</a>
+        <a href="{% url 'profiles:list' %}" class="list-group-item list-group-item-action {% if request.path|slice:'0:10' == '/profiles/' and request.path|slice:'10:' == '' %}active{% endif %}">Buscar amigos</a>
         <a href="{% url 'messenger:list' %}" class="list-group-item list-group-item-action {% if request.path|slice:'0:11' == '/messenger/' %}active{% endif %}">Mensajes</a>
         <a href="{% url 'perfil' %}" class="list-group-item list-group-item-action {% if request.path|slice:'0:8' == '/perfil/' %}active{% endif %}">Perfil</a>
       </div>
@@ -46,6 +46,25 @@
           <span class="navbar-toggler-icon"></span>
         </button>
 
+       {% if request.path|slice:'0:15' == '/publicaciones/' %}
+        <div class="col-xl-9 mx-auto">
+          <div class="cta-innerv text-center rounded">
+            <input type="hidden" id="email" value={{request.user.email}}>
+            <input type="hidden" id="tipo" value={{request.user.is_superuser}}>
+            <form method="GET" action="/publicaciones/">
+            <div class="grid-container" style="display:inline-grid; grid-template-columns: auto auto auto;">
+            <input type="text" name="title" style="grid-column: 3 / 4" placeholder="Buscar por titulo" class="form-control mt-1">
+            <input type="text" name="description" style="grid-column: 7 / 8" placeholder="Buscar por descripcion" class="form-control mt-1">
+            <select name="category" id="category" class="form-control mt-1">
+            <option value="">Buscar por Categoria</option>
+            </select>
+            <input type="submit" class="btn btn-primary btn-block mt-1" style="grid-column: 11 / 12" value="Buscar">
+            </div>
+            </form>
+          </div>          
+        </div>
+        {% endif %}
+
         <div class="collapse navbar-collapse" id="navbarSupportedContent">
           <ul class="navbar-nav ml-auto mt-2 mt-lg-0">
             <li class="nav-item active">
@@ -56,7 +75,6 @@
                 Opciones
               </a>
               <div class="dropdown-menu dropdown-menu-right" aria-labelledby="navbarDropdown">
-                <a class="dropdown-item" href="#">Configuración de cuenta</a>
                 <div class="dropdown-divider"></div>
                 <a class="dropdown-item" href="{% url 'home_page' %}">Ver sitio</a>
                 <div class="dropdown-divider"></div>
@@ -67,30 +85,24 @@
         </div>
       </nav>
 
-      <!--<div class="container-fluid">
-        <h1 class="mt-4">Simple Sidebar</h1>
-        <p>The starting state of the menu will appear collapsed on smaller screens, and will appear non-collapsed on larger screens. When toggled using the button below, the menu will change.</p>
-        <p>Make sure to keep all page content within the <code>#page-content-wrapper</code>. The top navbar is optional, and just for demonstration. Just create an element with the <code>#menu-toggle</code> ID which will toggle the menu when clicked.</p>
-      </div>
-    </div>
-    <-- /#page-content-wrapper -->
 
     {% block content %}{% endblock %}
 
+    </div>
   </div>
-  <!-- /#wrapper -->
+    <!-- /#wrapper -->
 
-  <!-- Bootstrap core JavaScript -->
-  <script src="{% static 'app_core/vendor/jquery/jquery.min.js' %}"></script>
-  <script src="{% static 'app_core/vendor/bootstrap/js/bootstrap.bundle.min.js' %}"></script>
+    <!-- Bootstrap core JavaScript -->
+    <script src="{% static 'app_core/vendor/jquery/jquery.min.js' %}"></script>
+    <script src="{% static 'app_core/vendor/bootstrap/js/bootstrap.bundle.min.js' %}"></script>
 
-  <!-- Menu Toggle Script -->
-  <script>
-    $("#menu-toggle").click(function(e) {
-      e.preventDefault();
-      $("#wrapper").toggleClass("toggled");
-    });
-  </script>
+    <!-- Menu Toggle Script -->
+    <script>
+      $("#menu-toggle").click(function(e) {
+        e.preventDefault();
+        $("#wrapper").toggleClass("toggled");
+      });
+    </script>
 
 </body>
 
